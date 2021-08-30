@@ -7,16 +7,29 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@mdi/js": "^5.9.55",
+    "animejs": "^3.2.1",
+    "axios": "^0.21.1",
+    "mdi-vue": "^3.0.7",
+    "qs": "^6.10.1",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vuetify": "^2.4.0"
   },
   "devDependencies": {
+    "@types/animejs": "^3.1.4",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
+    "sass": "~1.32.0",
+    "sass-loader": "^10.0.0",
+    "style-resources-loader": "^1.4.1",
     "typescript": "~4.1.5",
-    "vue-template-compiler": "^2.6.11"
+    "vue-cli-plugin-style-resources-loader": "^0.1.5",
+    "vue-cli-plugin-vuetify": "~2.4.2",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "^1.7.0"
   }
 }
