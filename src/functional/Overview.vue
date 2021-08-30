@@ -142,6 +142,7 @@
 				<v-expansion-panel-content>
 					<p>如果你是管理员，你可以对当前实例进行一些操作。</p>
 					<div class="instance-action">
+						<v-btn color="green" dark @click="createInstance()"><v-icon>mdi-plus</v-icon>创建实例</v-btn>
 						<v-menu>
 							<template v-slot:activator="{ on, attrs }">
 								<v-btn v-on="on" v-bind="attrs" color="red" dark
@@ -499,7 +500,6 @@ export default Vue.extend({
 				type: "stop",
 				token: getToken()
 			}).then(r => {
-				console.log(r)
 				if (r.data.status !== "ok") {
 					this.snackbar.text = translate(r.data.msg as string);
 					this.snackbar.open = true;
@@ -551,7 +551,6 @@ export default Vue.extend({
 			}
 		});
 		get("/api").then((r) => {
-			console.log(r);
 			if (r.data.status) {
 				if (r.data.status === "http-error") {
 					this.apiStatus = "正常";
