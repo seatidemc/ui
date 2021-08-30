@@ -7,6 +7,7 @@
 					<v-card-title>实例运行状态</v-card-title>
 					<v-card-subtitle>实例是指运行服务器的主机</v-card-subtitle>
 					<v-card-text>
+						<v-progress-circular v-if="instance.status === ''" size="20" width="2" indeterminate/>
 						<p class="display-1">
 							{{ instance.status }}
 						</p>
@@ -15,7 +16,7 @@
 						</p>
 						<p v-if="server.status === '正常'">
 							当前实例运行情况正常。<br />实例 ID: {{ instance.id
-							}}<br />IP: {{ server.ip || "-"}}
+							}}<br />IP: {{ server.ip || "-" }}
 						</p>
 					</v-card-text>
 					<v-card-actions>
@@ -35,6 +36,7 @@
 					<v-card-title>服务器运行状态</v-card-title>
 					<v-card-subtitle>Minecraft 服务器运行状态</v-card-subtitle>
 					<v-card-text>
+						<v-progress-circular v-if="server.status === ''" size="20" width="2" indeterminate/>
 						<p class="display-1">
 							{{ server.status }}
 						</p>
@@ -56,6 +58,7 @@
 						>API 是操作和控制服务器的基础</v-card-subtitle
 					>
 					<v-card-text>
+						<v-progress-circular v-if="apiStatus === ''" size="20" width="2" indeterminate/>
 						<p class="display-1">{{ apiStatus }}</p>
 						<p v-if="apiStatus === '异常'">
 							异常情况下，一切控制均无法正常操作，请及时联系技术人员解决。
@@ -367,7 +370,8 @@ export default Vue.extend({
 				this.server.ip = (r.data.data as any).ip;
 			}
 		});
-		get("/").then((r) => {
+		get("/api").then((r) => {
+			console.log(r);
 			if (r.data.status) {
 				if (r.data.status === "http-error") {
 					this.apiStatus = "正常";
