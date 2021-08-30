@@ -142,7 +142,9 @@
 				<v-expansion-panel-content>
 					<p>如果你是管理员，你可以对当前实例进行一些操作。</p>
 					<div class="instance-action">
-						<v-btn color="green" dark @click="createInstance()"><v-icon>mdi-plus</v-icon>创建实例</v-btn>
+						<v-btn color="green" dark @click="createInstance()"
+							><v-icon>mdi-plus</v-icon>创建实例</v-btn
+						>
 						<v-menu>
 							<template v-slot:activator="{ on, attrs }">
 								<v-btn v-on="on" v-bind="attrs" color="red" dark
@@ -159,12 +161,18 @@
 									>
 									<v-list-item-content>
 										<v-list-item-title>
-											警告：强制删除实例<strong>不会进行备份</strong>。<br />请确保服务器保有每
-											10 分钟一次的<br />计划备份，以防后患。
+											警告：强制删除实例<strong
+												>不<br />会进行备份</strong
+											>。<br />请确保服务器保有每<br />
+											10 分钟一次的计划备<br />份，以防后患。
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
-								<v-list-item @click="deleteInstance()" style="color: #f44336" link>
+								<v-list-item
+									@click="deleteInstance()"
+									style="color: #f44336"
+									link
+								>
 									<v-list-item-icon
 										><v-icon style="color: #f44336"
 											>mdi-check</v-icon
@@ -210,12 +218,16 @@
 									>
 									<v-list-item-content>
 										<v-list-item-title>
-											警告：停止实例并<strong>不会正常关闭服务器</strong>。<br />极有可能造成存档损坏。<br />请确保服务器保有每
-											10 分钟一次的<br />计划备份，以防后患。
+											警告：停止实例并<strong>不<br />会正常关闭服务器</strong>。<br />极有可能造成存档损<br />坏。请确保服务器保<br />有每
+											10 分钟一次的计<br />划备份，以防后患。
 										</v-list-item-title>
 									</v-list-item-content>
 								</v-list-item>
-								<v-list-item @click="stopInstance()" style="color: #f44336" link>
+								<v-list-item
+									@click="stopInstance()"
+									style="color: #f44336"
+									link
+								>
 									<v-list-item-icon
 										><v-icon style="color: #f44336"
 											>mdi-check</v-icon
@@ -482,8 +494,8 @@ export default Vue.extend({
 		deleteInstance() {
 			post("/api/ecs/v1/action", {
 				type: "delete",
-				token: getToken()
-			}).then(r => {
+				token: getToken(),
+			}).then((r) => {
 				if (r.data.status !== "ok") {
 					this.snackbar.text = translate(r.data.msg as string);
 					this.snackbar.open = true;
@@ -493,13 +505,13 @@ export default Vue.extend({
 					this.snackbar.open = true;
 					this.$router.go(0);
 				}
-			})
+			});
 		},
 		stopInstance() {
 			post("/api/ecs/v1/action", {
 				type: "stop",
-				token: getToken()
-			}).then(r => {
+				token: getToken(),
+			}).then((r) => {
 				if (r.data.status !== "ok") {
 					this.snackbar.text = translate(r.data.msg as string);
 					this.snackbar.open = true;
@@ -509,13 +521,13 @@ export default Vue.extend({
 					this.snackbar.open = true;
 					this.$router.go(0);
 				}
-			})
+			});
 		},
 		startInstance() {
 			post("/api/ecs/v1/action", {
 				type: "start",
-				token: getToken()
-			}).then(r => {
+				token: getToken(),
+			}).then((r) => {
 				if (r.data.status !== "ok") {
 					if (r.data.msg?.includes("is Running but")) {
 						this.snackbar.text = "服务器正在运行中，无需启动。";
@@ -530,8 +542,8 @@ export default Vue.extend({
 					this.snackbar.open = true;
 					this.$router.go(0);
 				}
-			})
-		}
+			});
+		},
 	},
 	mounted() {
 		get("/api/ecs/v1/describe/status").then((r) => {
