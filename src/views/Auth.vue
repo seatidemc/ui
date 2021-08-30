@@ -18,7 +18,7 @@
 							<v-text-field
 								prepend-icon="mdi-account-circle"
 								label="用户名"
-								:rules="[rules.required, rules.username]"
+								:rules="[rules.required]"
 								v-model="info.username"
 								hint="建议填写 Minecraft 游戏名"
 								type="text"
@@ -28,7 +28,7 @@
 							<v-text-field
 								prepend-icon="mdi-key"
 								label="密码"
-								:rules="[rules.required, rules.password]"
+								:rules="[rules.required]"
 								v-model="info.password"
 								hint="包含数字和字母"
 								type="password"
