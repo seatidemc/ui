@@ -219,12 +219,18 @@ export default Vue.extend({
 		font-size: 54px;
 		margin: 0;
 		padding: 0;
+		@media screen and (max-width: 800px) {
+			font-size: 40px;
+		}
 	}
 
 	.auth-text {
 		padding-top: 0;
 		font-weight: normal;
 		color: rgba(0, 0, 0, 0.21);
+		@media screen and (max-width: 800px) {
+			font-size: 20px;
+		}
 	}
 }
 
@@ -232,6 +238,9 @@ export default Vue.extend({
 	width: 350px;
 	display: block;
 	margin: auto;
+	@media screen and (max-width: 800px) {
+		width: 300px;
+	}
 }
 
 .btn-primary {

@@ -42,7 +42,7 @@
 					</div>
 				</template>
 			</v-navigation-drawer>
-			<v-app-bar absolute elevate color="black" dark app>
+			<v-app-bar elevate color="black" dark app>
 				<v-btn icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
