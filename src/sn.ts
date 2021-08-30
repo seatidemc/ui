@@ -75,3 +75,15 @@ export function checkLogin(username: string, token: string) {
 			});
 	});
 }
+
+export function isSM() {
+	return window.innerWidth < 800;
+}
+
+/**
+ * Vuetify 从大屏到小屏转换的 breakpoint 是 1200px，这时抽屉侧边栏等会发生变化，可使用此函数来判断。
+ * @returns Less than MD Breakpoint?
+ */
+export function ltMdBreakpoint() {
+	return window.innerWidth < 1200;
+}

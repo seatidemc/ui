@@ -94,7 +94,7 @@
 					<p>
 						这些信息是提前预设的信息，所有新创建的实例都会基于此信息进行配置。
 					</p>
-					<v-list
+					<v-list :dense="isSM()"
 						v-if="
 							instance.info.status === 'ok' &&
 							instance.infoRender.length > 0
@@ -179,7 +179,7 @@
 </template>
 
 <script lang="ts">
-import { get, getToken, post, translate } from "@/sn";
+import { get, getToken, post, translate, isSM } from "@/sn";
 import Vue from "vue";
 export default Vue.extend({
 	data() {
@@ -352,6 +352,7 @@ export default Vue.extend({
 		async sleep(time: number) {
 			return new Promise((re) => setTimeout(re, time * 1000));
 		},
+		isSM
 	},
 	mounted() {
 		get("/api/ecs/v1/describe/status").then((r) => {
@@ -432,5 +433,12 @@ h2 {
 	line-height: 1.2;
 	font-family: ui-monospace, "Consolas", "Menlo", monospace;
 	font-size: 14px;
+}
+
+.col {
+	@media (max-width: 1040px) {
+		max-width: 100% !important;
+		flex: 0 0 100% !important;
+	}
 }
 </style>

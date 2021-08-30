@@ -7,16 +7,16 @@
 						<v-list-item-title class="username">{{
 							username
 						}}</v-list-item-title>
-						<v-list-item-subtitle class="position"
-							>管理员</v-list-item-subtitle
-						>
+						<v-list-item-subtitle class="position">{{
+							username === "admin" ? "管理员" : "普通用户"
+						}}</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 				<v-divider />
 				<v-list>
 					<v-list-item-group v-model="listItem">
 						<v-list-item
-							@click.native="current = x.to"
+							@click.native="current = x.to; closeDrawerOptional()"
 							link
 							v-for="(x, i) in drawerItems"
 							:key="i"
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { delToken, getTokenUsername } from "@/sn";
+import { delToken, getTokenUsername, ltMdBreakpoint } from "@/sn";
 import Vue from "vue";
 import Overview from "@/functional/Overview.vue";
 import Users from "@/functional/Users.vue";
@@ -74,7 +74,7 @@ export default Vue.extend({
 	data() {
 		return {
 			username: "",
-			drawer: null,
+			drawer: null as null | boolean,
 			drawerItems: [
 				{
 					title: "概览",
@@ -88,7 +88,7 @@ export default Vue.extend({
 				},
 			],
 			current: "overview",
-			listItem: 0
+			listItem: 0,
 		};
 	},
 	mounted() {
@@ -103,6 +103,11 @@ export default Vue.extend({
 			delToken();
 			this.$router.push({ name: "auth" });
 		},
+		closeDrawerOptional() {
+			if (ltMdBreakpoint()) {
+				this.drawer = false;
+			}
+		}
 	},
 });
 </script>
@@ -116,5 +121,10 @@ export default Vue.extend({
 
 .main-card {
 	padding: 16px 32px;
+
+	@media (max-width: 800px) {
+		box-shadow: none !important;
+		padding: 0;
+	}
 }
 </style>
