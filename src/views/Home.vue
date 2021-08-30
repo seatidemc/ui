@@ -14,14 +14,23 @@
 				</v-list-item>
 				<v-divider />
 				<v-list>
-					<v-list-item link v-for="(x, i) in drawerItems" :key="i">
-						<v-list-item-icon
-							><v-icon>{{ x.icon }}</v-icon></v-list-item-icon
+					<v-list-item-group v-model="listItem">
+						<v-list-item
+							@click.native="current = x.to"
+							link
+							v-for="(x, i) in drawerItems"
+							:key="i"
 						>
-						<v-list-item-content>
-							<v-list-item-title>{{ x.title }}</v-list-item-title>
-						</v-list-item-content>
-					</v-list-item>
+							<v-list-item-icon
+								><v-icon>{{ x.icon }}</v-icon></v-list-item-icon
+							>
+							<v-list-item-content>
+								<v-list-item-title>{{
+									x.title
+								}}</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list-item-group>
 				</v-list>
 				<template v-slot:append>
 					<div class="pa-2">
@@ -46,7 +55,8 @@
 			<v-main>
 				<v-container>
 					<v-card class="main-card">
-						<overview />
+						<overview v-if="current === 'overview'" />
+						<users v-if="current === 'users'" />
 					</v-card>
 				</v-container>
 			</v-main>
@@ -58,6 +68,7 @@
 import { delToken, getTokenUsername } from "@/sn";
 import Vue from "vue";
 import Overview from "@/functional/Overview.vue";
+import Users from "@/functional/Users.vue";
 
 export default Vue.extend({
 	data() {
@@ -68,13 +79,16 @@ export default Vue.extend({
 				{
 					title: "概览",
 					icon: "mdi-view-dashboard",
+					to: "overview",
 				},
 				{
-					title: "服务器",
+					title: "用户管理",
 					icon: "mdi-server",
+					to: "users",
 				},
 			],
 			current: "overview",
+			listItem: 0
 		};
 	},
 	mounted() {
@@ -82,6 +96,7 @@ export default Vue.extend({
 	},
 	components: {
 		Overview,
+		Users,
 	},
 	methods: {
 		logout() {
