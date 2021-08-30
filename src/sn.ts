@@ -8,7 +8,9 @@ const TRANSLATION: Dictionary = {
 	'Username already exists.': '用户名已被使用。',
 	'Unable to find instance id in database.': '实例不存在。',
 	'No server ip found in database.': '服务器不存在。',
-	"Permission denied. Details: Administrator's token is required.": "你的权限不足以执行此操作。"
+	"Permission denied. Details: Administrator's token is required.": "你的权限不足以执行此操作。",
+	'Not verified.': "密码不正确。",
+	"Expired token.": "你的登陆凭证已失效。"
 };
 
 export function post(url: string, data: any) {
