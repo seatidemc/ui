@@ -6,11 +6,15 @@ const TRANSLATION: Dictionary = {
 	'User not exists.': '用户不存在。',
 	'Invalid action.': '无效操作。',
 	'Username already exists.': '用户名已被使用。',
-	'Unable to find instance id in database.': '实例不存在。',
+	'No instance id found in database.': '实例不存在。',
 	'No server ip found in database.': '服务器不存在。',
-	"Permission denied. Details: Administrator's token is required.": "你的权限不足以执行此操作。",
+	"Permission denied.": "你的权限不足以执行此操作。",
 	'Not verified.': "密码不正确。",
-	"Expired token.": "你的登陆凭证已失效。"
+	"Expired token.": "你的登陆凭证已失效。",
+	'Failed to open tasks.': "无法执行既定任务。",
+	'Failed to get InstanceId.': "无法获取实例 ID。",
+	'No invocation history found.': "找不到部署执行记录。",
+	'No invocation information found.': "找不到部署执行信息。"
 };
 
 export function post(url: string, data: any) {
@@ -34,7 +38,7 @@ export function get(url: string) {
 export function translate(str: string, withoutStop = false) {
 	let result = TRANSLATION[str];
 	if (Object.keys(TRANSLATION).includes(str)) return withoutStop ? result.slice(0, result.length - 1) : result;
-	return 'TRANSLATION_NOT_FOUND';
+	return str;
 }
 
 export function setToken(token: string, username: string) {
