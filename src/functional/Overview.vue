@@ -7,7 +7,12 @@
 					<v-card-title>实例运行状态</v-card-title>
 					<v-card-subtitle>实例是指运行服务器的主机</v-card-subtitle>
 					<v-card-text>
-						<v-progress-circular v-if="instance.status === ''" size="20" width="2" indeterminate/>
+						<v-progress-circular
+							v-if="instance.status === ''"
+							size="20"
+							width="2"
+							indeterminate
+						/>
 						<p class="display-1">
 							{{ instance.status }}
 						</p>
@@ -36,7 +41,12 @@
 					<v-card-title>服务器运行状态</v-card-title>
 					<v-card-subtitle>Minecraft 服务器运行状态</v-card-subtitle>
 					<v-card-text>
-						<v-progress-circular v-if="server.status === ''" size="20" width="2" indeterminate/>
+						<v-progress-circular
+							v-if="server.status === ''"
+							size="20"
+							width="2"
+							indeterminate
+						/>
 						<p class="display-1">
 							{{ server.status }}
 						</p>
@@ -58,7 +68,12 @@
 						>API 是操作和控制服务器的基础</v-card-subtitle
 					>
 					<v-card-text>
-						<v-progress-circular v-if="apiStatus === ''" size="20" width="2" indeterminate/>
+						<v-progress-circular
+							v-if="apiStatus === ''"
+							size="20"
+							width="2"
+							indeterminate
+						/>
 						<p class="display-1">{{ apiStatus }}</p>
 						<p v-if="apiStatus === '异常'">
 							异常情况下，一切控制均无法正常操作，请及时联系技术人员解决。
@@ -94,7 +109,8 @@
 					<p>
 						这些信息是提前预设的信息，所有新创建的实例都会基于此信息进行配置。
 					</p>
-					<v-list :dense="isSM()"
+					<v-list
+						:dense="isSM()"
 						v-if="
 							instance.info.status === 'ok' &&
 							instance.infoRender.length > 0
@@ -119,6 +135,115 @@
 							</v-list-item-content>
 						</v-list-item>
 					</v-list>
+				</v-expansion-panel-content>
+			</v-expansion-panel>
+			<v-expansion-panel>
+				<v-expansion-panel-header> 实例操作 </v-expansion-panel-header>
+				<v-expansion-panel-content>
+					<p>如果你是管理员，你可以对当前实例进行一些操作。</p>
+					<div class="instance-action">
+						<v-menu>
+							<template v-slot:activator="{ on, attrs }">
+								<v-btn v-on="on" v-bind="attrs" color="red" dark
+									><v-icon>mdi-delete</v-icon
+									>强制删除实例</v-btn
+								>
+							</template>
+							<v-list max-width="400px">
+								<v-list-item>
+									<v-list-item-icon
+										><v-icon style="color: #f44336"
+											>mdi-message-alert</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title>
+											警告：强制删除实例<strong>不会进行备份</strong>。<br />请确保服务器保有每
+											10 分钟一次的<br />计划备份，以防后患。
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item @click="deleteInstance()" style="color: #f44336" link>
+									<v-list-item-icon
+										><v-icon style="color: #f44336"
+											>mdi-check</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title
+											>继续</v-list-item-title
+										>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item link>
+									<v-list-item-icon
+										><v-icon
+											>mdi-close</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title
+											>取消</v-list-item-title
+										>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+						<v-menu>
+							<template v-slot:activator="{ on, attrs }">
+								<v-btn
+									color="pink"
+									dark
+									v-on="on"
+									v-bind="attrs"
+									><v-icon>mdi-close-octagon-outline</v-icon
+									>停止实例</v-btn
+								>
+							</template>
+							<v-list max-width="400px">
+								<v-list-item>
+									<v-list-item-icon
+										><v-icon style="color: #f44336"
+											>mdi-message-alert</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title>
+											警告：停止实例并<strong>不会正常关闭服务器</strong>。<br />极有可能造成存档损坏。<br />请确保服务器保有每
+											10 分钟一次的<br />计划备份，以防后患。
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item @click="stopInstance()" style="color: #f44336" link>
+									<v-list-item-icon
+										><v-icon style="color: #f44336"
+											>mdi-check</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title
+											>继续</v-list-item-title
+										>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item link>
+									<v-list-item-icon
+										><v-icon
+											>mdi-close</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title
+											>取消</v-list-item-title
+										>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+						<v-btn @click="startInstance()" color="blue" dark
+							><v-icon>mdi-launch</v-icon>启动实例
+						</v-btn>
+					</div>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 			<v-expansion-panel v-if="deployStatus.length > 0">
@@ -352,7 +477,61 @@ export default Vue.extend({
 		async sleep(time: number) {
 			return new Promise((re) => setTimeout(re, time * 1000));
 		},
-		isSM
+		isSM,
+		deleteInstance() {
+			post("/api/ecs/v1/action", {
+				type: "delete",
+				token: getToken()
+			}).then(r => {
+				if (r.data.status !== "ok") {
+					this.snackbar.text = translate(r.data.msg as string);
+					this.snackbar.open = true;
+					return;
+				} else {
+					this.snackbar.text = "成功删除实例。";
+					this.snackbar.open = true;
+					this.$router.go(0);
+				}
+			})
+		},
+		stopInstance() {
+			post("/api/ecs/v1/action", {
+				type: "stop",
+				token: getToken()
+			}).then(r => {
+				console.log(r)
+				if (r.data.status !== "ok") {
+					this.snackbar.text = translate(r.data.msg as string);
+					this.snackbar.open = true;
+					return;
+				} else {
+					this.snackbar.text = "成功停止实例。";
+					this.snackbar.open = true;
+					this.$router.go(0);
+				}
+			})
+		},
+		startInstance() {
+			post("/api/ecs/v1/action", {
+				type: "start",
+				token: getToken()
+			}).then(r => {
+				if (r.data.status !== "ok") {
+					if (r.data.msg?.includes("is Running but")) {
+						this.snackbar.text = "服务器正在运行中，无需启动。";
+						this.snackbar.open = true;
+						return;
+					}
+					this.snackbar.text = translate(r.data.msg as string);
+					this.snackbar.open = true;
+					return;
+				} else {
+					this.snackbar.text = "成功开启实例。";
+					this.snackbar.open = true;
+					this.$router.go(0);
+				}
+			})
+		}
 	},
 	mounted() {
 		get("/api/ecs/v1/describe/status").then((r) => {
@@ -439,6 +618,26 @@ h2 {
 	@media (max-width: 1040px) {
 		max-width: 100% !important;
 		flex: 0 0 100% !important;
+	}
+}
+
+.instance-action {
+	display: flex;
+	align-items: center;
+
+	@media (max-width: 800px) {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.v-btn {
+		.v-icon {
+			margin-right: 0.5em;
+		}
+		margin: 0 8px;
+		@media (max-width: 800px) {
+			margin: 8px 0;
+		}
 	}
 }
 </style>
