@@ -7,7 +7,10 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'home',
-    component: () => import("@/views/Home.vue")
+    component: () => import("@/views/Home.vue"),
+    meta: {
+      authRequired: true
+    }
   },
   {
     path: '/about',

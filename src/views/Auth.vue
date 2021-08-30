@@ -99,7 +99,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { post, setToken, translate } from "@/sn";
+import {
+	checkLogin,
+	getToken,
+	getTokenUsername,
+	post,
+	setToken,
+	translate,
+} from "@/sn";
 
 export default Vue.extend({
 	data() {
@@ -172,13 +179,13 @@ export default Vue.extend({
 					type: "create",
 				})
 					.then((r) => {
-						console.log(r)
 						if (r.data.status !== "ok") {
 							this.snackbarText = translate(r.data.msg as string);
 							this.snackbar = true;
 							return;
 						} else {
-							this.snackbarText = "成功创建用户 " + this.info.username + "。";
+							this.snackbarText =
+								"成功创建用户 " + this.info.username + "。";
 							this.snackbar = true;
 							this.tab = 0;
 							return;
@@ -194,6 +201,15 @@ export default Vue.extend({
 		tab(v) {
 			this.lor = ["登入", "注册"][v] as "登入" | "注册";
 		},
+	},
+	beforeRouteEnter(to, from, next) {
+		checkLogin(getTokenUsername(), getToken())
+			.then(() => {
+				next("/");
+			})
+			.catch(() => {
+				next();
+			});
 	},
 });
 </script>
