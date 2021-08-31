@@ -16,7 +16,10 @@
 				<v-list>
 					<v-list-item-group v-model="listItem">
 						<v-list-item
-							@click.native="current = x.to; closeDrawerOptional()"
+							@click.native="
+								current = x.to;
+								closeDrawerOptional();
+							"
 							link
 							v-for="(x, i) in drawerItems"
 							:key="i"
@@ -55,8 +58,7 @@
 			<v-main>
 				<v-container>
 					<v-card class="main-card">
-						<overview v-if="current === 'overview'" />
-						<users v-if="current === 'users'" />
+						<component :is="current" />
 					</v-card>
 				</v-container>
 			</v-main>
@@ -107,7 +109,7 @@ export default Vue.extend({
 			if (ltMdBreakpoint()) {
 				this.drawer = false;
 			}
-		}
+		},
 	},
 });
 </script>

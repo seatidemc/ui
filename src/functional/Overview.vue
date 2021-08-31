@@ -100,7 +100,7 @@
 							v-if="instance.info.status === 'loading'"
 							width="2"
 							size="20"
-						/><v-icon color="teal" v-else
+						/><v-icon color="green" v-else
 							>mdi-check</v-icon
 						></template
 					>实例信息
@@ -267,7 +267,7 @@
 							v-if="deployStatus === 'loading'"
 							width="2"
 							size="20"
-						/><v-icon v-if="deployStatus === 'ok'" color="teal"
+						/><v-icon v-if="deployStatus === 'ok'" color="green"
 							>mdi-check</v-icon
 						><v-icon v-if="deployStatus === 'ng'" color="red"
 							>mdi-close</v-icon
@@ -293,7 +293,7 @@
 				<v-card-title>操作：创建实例</v-card-title>
 				<v-card-text
 					>创建一个实例并开启服务器，需要大约 5
-					分钟的时间。服务器开启以后，如果在线人数为 0 持续 12
+					分钟的时间。服务器开启以后，如果在线人数为 0 持续 6
 					小时，将会被自动释放。</v-card-text
 				>
 				<v-card-actions>
