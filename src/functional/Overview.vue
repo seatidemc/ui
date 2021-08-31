@@ -218,7 +218,9 @@
 									>
 									<v-list-item-content>
 										<v-list-item-title>
-											警告：停止实例并<strong>不<br />会正常关闭服务器</strong>。<br />极有可能造成存档损<br />坏。请确保服务器保<br />有每
+											警告：停止实例并<strong
+												>不<br />会正常关闭服务器</strong
+											>。<br />极有可能造成存档损<br />坏。请确保服务器保<br />有每
 											10 分钟一次的计<br />划备份，以防后患。
 										</v-list-item-title>
 									</v-list-item-content>
@@ -558,7 +560,11 @@ export default Vue.extend({
 			if (r.data.status !== "ok") {
 				this.server.status = translate(r.data.msg as string, true);
 			} else {
-				this.server.status = "正常";
+				if ((r.data.data as any).online === false) {
+					this.server.status = "已停止或启动中";
+				} else {
+					this.server.status = "正常";
+				}
 				this.server.ip = (r.data.data as any).ip;
 			}
 		});
