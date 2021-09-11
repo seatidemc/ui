@@ -19,9 +19,9 @@
 						<p v-if="instance.status === '实例不存在'">
 							实例不存在大多数情况下是因为长时间无人在线，被自动释放；也有可能因为库存问题被强制释放，一般重新开启即可解决。
 						</p>
-						<p v-if="server.status === '正常'">
+						<p v-if="instance.status === '正常'">
 							当前实例运行情况正常。<br />实例 ID: {{ instance.id
-							}}<br />IP: {{ server.ip || "-" }}
+							}}<br />IP: {{ server.ip || "暂无" }}
 						</p>
 					</v-card-text>
 					<v-card-actions>
