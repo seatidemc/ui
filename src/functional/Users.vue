@@ -256,6 +256,10 @@ export default Vue.extend({
 			this.selectedItems.forEach((k) => {
 				usernames.push(k.username);
 			});
+            if (usernames.length === 1) {
+                this.currentTarget = this.selectedItems[0];
+                return this.deleteSingle();
+            }
 			post("/api/user/v1/action", {
 				type: "delete",
 				usernames,
@@ -280,6 +284,7 @@ export default Vue.extend({
 		refreshTable() {
 			this.getData(this.page);
 			this.refreshPagin();
+            this.selectedItems = [];
 		},
 		submitEdit() {
 			this.dialog.edit = false;
