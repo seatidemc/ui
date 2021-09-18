@@ -8,13 +8,16 @@ import * as mdijs from '@mdi/js';
 import mdiVue from 'mdi-vue/v2';
 
 import vuetify from './plugins/vuetify';
-import { checkLogin, getToken, getTokenUsername, post } from './sn';
+import { checkAdmin, checkLogin, getToken, getTokenUsername, post } from './sn';
 
 Vue.use(mdiVue, {
 	icons: mdijs
 });
 Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => {
+	checkAdmin().then(r => {
+		Vue.prototype.$isAdmin = r;
+	});
 	if (to.meta) {
 		if (to.meta.authRequired === true) {
 			let token = getToken();
@@ -33,6 +36,7 @@ router.beforeEach((to, from, next) => {
 		next();
 	}
 });
+Vue.prototype.$isAdmin = false;
 
 new Vue({
 	router,

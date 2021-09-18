@@ -8,7 +8,7 @@
 							username
 						}}</v-list-item-title>
 						<v-list-item-subtitle class="position">{{
-							username === "admin" ? "管理员" : "普通用户"
+							$isAdmin ? "管理员" : "普通用户"
 						}}</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
@@ -21,7 +21,7 @@
 								closeDrawerOptional();
 							"
 							link
-							v-for="(x, i) in drawerItems"
+							v-for="(x, i) in getDrawerItems()"
 							:key="i"
 						>
 							<v-list-item-icon
@@ -77,18 +77,6 @@ export default Vue.extend({
 		return {
 			username: "",
 			drawer: null as null | boolean,
-			drawerItems: [
-				{
-					title: "概览",
-					icon: "mdi-view-dashboard",
-					to: "overview",
-				},
-				{
-					title: "用户管理",
-					icon: "mdi-server",
-					to: "users",
-				},
-			],
 			current: "overview",
 			listItem: 0,
 		};
@@ -110,6 +98,23 @@ export default Vue.extend({
 				this.drawer = false;
 			}
 		},
+		getDrawerItems() {
+			let r = [
+				{
+					title: "概览",
+					icon: "mdi-view-dashboard",
+					to: "overview",
+				},
+			];
+			if (this.$isAdmin) {
+				r = r.concat({
+					title: "用户管理",
+					icon: "mdi-server",
+					to: "users",
+				});
+			}
+			return r;
+		},
 	},
 });
 </script>
@@ -119,6 +124,7 @@ export default Vue.extend({
 	font-weight: bold;
 	font-size: 24px;
 	.primary-text;
+	display: inline-block;
 }
 
 .main-card {

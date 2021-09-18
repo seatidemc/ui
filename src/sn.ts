@@ -59,6 +59,24 @@ export function getTokenUsername() {
 	return localStorage.getItem('seatide-username') || '';
 }
 
+export function checkAdmin() {
+	return new Promise<boolean>((r, j) => {
+		post("/api/user/v1/auth", {
+			type: "checkAdmin",
+			token: getToken()
+		}).then(re => {
+			if (re.data.status === "ok") {
+				r(re.data.data === true);
+			} else {
+				r(false);
+			}
+		}).catch(e => {
+			console.warn(e);
+			j();
+		})
+	});
+}
+
 export function checkLogin(username: string, token: string) {
 	return new Promise<void>((r, j) => {
 		post('/api/user/v1/auth', {

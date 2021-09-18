@@ -2,7 +2,7 @@
 	<div users>
 		<h1>用户管理</h1>
 		<p>下面展示了所有的注册用户信息，你可以修改它们。</p>
-		<v-data-table
+		<v-data-table v-if="verified"
 			no-results-text="暂无结果"
 			loading-text="加载数据中..."
 			:loading="tableLoading"
@@ -164,7 +164,7 @@
 </template>
 
 <script lang="ts">
-import { get, getToken, post } from "@/sn";
+import { checkAdmin, get, getToken, post } from "@/sn";
 import Vue from "vue";
 export default Vue.extend({
 	data() {
@@ -218,6 +218,7 @@ export default Vue.extend({
 			snackbarText: "",
 			paginPage: 1,
 			totalPages: 0,
+            verified: false
 		};
 	},
 	methods: {
@@ -339,6 +340,11 @@ export default Vue.extend({
 		},
 	},
 	mounted() {
+        checkAdmin().then(r => {
+            if (r) {
+                this.verified = true;
+            }
+        })
 		this.getData(0);
 		this.refreshPagin();
 	},
