@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import qs from 'qs';
 
-const ENDPOINT = 'https://seatide.leviatan.cn';
+const ENDPOINT = 'http://localhost:8081';
 const TRANSLATION: Dictionary = {
 	'User not exists.': '用户不存在。',
 	'Invalid action.': '无效操作。',
@@ -20,7 +20,7 @@ const TRANSLATION: Dictionary = {
 export function post(url: string, data: any) {
 	return new Promise<AxiosResponse<BackendResponse>>((re, rj) => {
 		axios
-			.post(ENDPOINT + url, qs.stringify(data))
+			.post(ENDPOINT + url, data)
 			.then(r => re(r))
 			.catch(e => rj(e));
 	});

@@ -21,3 +21,12 @@ interface InstanceDisk {
 	size: number;
 	type: string;
 }
+
+interface User {
+	created_at: string;
+	email: string;
+	group: string;
+	id: number;
+	nickname: string | null;
+	username: string
+}
