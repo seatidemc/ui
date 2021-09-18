@@ -326,6 +326,7 @@ export default Vue.extend({
 					}
 				});
 			}
+            this.dialog.editAction = ""
 		},
 		refreshPagin() {
 			get("/api/user/v1/get/count").then((r) => {
