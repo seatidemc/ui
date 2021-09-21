@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-import qs from 'qs';
 
 const ENDPOINT = 'https://seatide.leviatan.cn';
 const TRANSLATION: Dictionary = {
@@ -8,13 +7,14 @@ const TRANSLATION: Dictionary = {
 	'Username already exists.': '用户名已被使用。',
 	'No instance id found in database.': '实例不存在。',
 	'No server ip found in database.': '服务器不存在。',
-	"Permission denied.": "你的权限不足以执行此操作。",
-	'Not verified.': "密码不正确。",
-	"Expired token.": "你的登陆凭证已失效。",
-	'Failed to open tasks.': "无法执行既定任务。",
-	'Failed to get InstanceId.': "无法获取实例 ID。",
-	'No invocation history found.': "找不到部署执行记录。",
-	'No invocation information found.': "找不到部署执行信息。"
+	'Permission denied.': '你的权限不足以执行此操作。',
+	'Not verified.': '密码不正确。',
+	'Expired token.': '你的登陆凭证已失效。',
+	'Failed to open tasks.': '无法执行既定任务。',
+	'Failed to get InstanceId.': '无法获取实例 ID。',
+	'No invocation history found.': '找不到部署执行记录。',
+	'No invocation information found.': '找不到部署执行信息。',
+	'There is already an instance recorded in the database.': '实例已存在或正在部署。'
 };
 
 export function post(url: string, data: any) {
@@ -61,19 +61,21 @@ export function getTokenUsername() {
 
 export function checkAdmin() {
 	return new Promise<boolean>((r, j) => {
-		post("/api/user/v1/auth", {
-			type: "checkAdmin",
+		post('/api/user/v1/auth', {
+			type: 'checkAdmin',
 			token: getToken()
-		}).then(re => {
-			if (re.data.status === "ok") {
-				r(re.data.data === true);
-			} else {
-				r(false);
-			}
-		}).catch(e => {
-			console.warn(e);
-			j();
 		})
+			.then(re => {
+				if (re.data.status === 'ok') {
+					r(re.data.data === true);
+				} else {
+					r(false);
+				}
+			})
+			.catch(e => {
+				console.warn(e);
+				j();
+			});
 	});
 }
 
