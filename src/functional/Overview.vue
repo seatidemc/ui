@@ -117,51 +117,71 @@
 		</v-alert>
 		<v-expansion-panels class="expansions">
 			<v-expansion-panel>
-				<v-expansion-panel-header disable-icon-rotate
-					>配置
-				</v-expansion-panel-header>
+				<v-expansion-panel-header> 操作 </v-expansion-panel-header>
 				<v-expansion-panel-content>
-					<p>
-						这些信息是提前预设的信息，所有新创建的实例都会基于此信息进行配置。
-					</p>
-					<v-list
-						:dense="isSM()"
-						v-if="
-							instance.infoRender.length > 0
-						"
-					>
-						<v-list-item
-							v-for="(x, i) in instance.infoRender"
-							:key="i"
-						>
-							<v-list-item-icon
-								><v-icon
-									>mdi-{{ x.icon }}</v-icon
-								></v-list-item-icon
-							>
-							<v-list-item-content>
-								<v-list-item-title>{{
-									x.value
-								}}</v-list-item-title>
-								<v-list-item-subtitle>{{
-									x.name
-								}}</v-list-item-subtitle>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
-				</v-expansion-panel-content>
-			</v-expansion-panel>
-			<v-expansion-panel>
-				<v-expansion-panel-header> 实例操作 </v-expansion-panel-header>
-				<v-expansion-panel-content>
-					<p>如果你是管理员，你可以对当前实例进行一些操作。</p>
+					<p>这里列出了你可以对实例进行的操作。</p>
 					<div class="instance-action">
-						<v-btn color="green" dark @click="createInstance()"
-							><v-icon>mdi-plus</v-icon>创建实例</v-btn
-						>
 						<v-menu>
 							<template v-slot:activator="{ on, attrs }">
-								<v-btn v-on="on" v-bind="attrs" color="red" dark
+								<v-btn
+									v-on="on"
+									v-bind="attrs"
+									color="green"
+									dark
+									><v-icon>mdi-plus</v-icon>创建实例</v-btn
+								>
+							</template>
+							<v-list max-width="400px">
+								<v-list-item>
+									<v-list-item-icon
+										><v-icon
+											>mdi-help-circle-outline</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title>
+											是否立即创建实例？
+										</v-list-item-title>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item
+									@click="createInstance()"
+									style="color: #4caf50"
+									link
+								>
+									<v-list-item-icon
+										><v-icon style="color: #4caf50"
+											>mdi-arrow-right</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title
+											>继续</v-list-item-title
+										>
+									</v-list-item-content>
+								</v-list-item>
+								<v-list-item link>
+									<v-list-item-icon
+										><v-icon
+											>mdi-close</v-icon
+										></v-list-item-icon
+									>
+									<v-list-item-content>
+										<v-list-item-title
+											>取消</v-list-item-title
+										>
+									</v-list-item-content>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+						<v-menu>
+							<template v-slot:activator="{ on, attrs }">
+								<v-btn
+									:disabled="!$isAdmin"
+									v-on="on"
+									v-bind="attrs"
+									color="red"
+									dark
 									><v-icon>mdi-delete</v-icon
 									>强制删除实例</v-btn
 								>
@@ -215,6 +235,7 @@
 						<v-menu>
 							<template v-slot:activator="{ on, attrs }">
 								<v-btn
+									:disabled="!$isAdmin"
 									color="pink"
 									dark
 									v-on="on"
@@ -269,10 +290,47 @@
 								</v-list-item>
 							</v-list>
 						</v-menu>
-						<v-btn @click="startInstance()" color="blue" dark
+						<v-btn
+							:disabled="!$isAdmin"
+							@click="startInstance()"
+							color="blue"
+							dark
 							><v-icon>mdi-launch</v-icon>启动实例
 						</v-btn>
 					</div>
+				</v-expansion-panel-content>
+			</v-expansion-panel>
+			<v-expansion-panel>
+				<v-expansion-panel-header disable-icon-rotate
+					>配置
+				</v-expansion-panel-header>
+				<v-expansion-panel-content>
+					<p>
+						这些信息是提前预设的信息，所有新创建的实例都会基于此信息进行配置。
+					</p>
+					<v-list
+						:dense="isSM()"
+						v-if="instance.infoRender.length > 0"
+					>
+						<v-list-item
+							v-for="(x, i) in instance.infoRender"
+							:key="i"
+						>
+							<v-list-item-icon
+								><v-icon
+									>mdi-{{ x.icon }}</v-icon
+								></v-list-item-icon
+							>
+							<v-list-item-content>
+								<v-list-item-title>{{
+									x.value
+								}}</v-list-item-title>
+								<v-list-item-subtitle>{{
+									x.name
+								}}</v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+					</v-list>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 			<v-expansion-panel v-if="deployStatus.length > 0">
@@ -292,42 +350,18 @@
 				>
 				<v-expansion-panel-content>
 					<p>
-						你已经成功请求了实例的创建，你可以在这里查看其运行情况。如果运行失败，请注意分析内容，再尝试重新运行。<br />请尽量认真，避免出现多开、超开的情况，造成不必要的金额损失。
+						你已经成功请求了实例的创建，你可以在这里查看其运行情况。<strong>如果运行失败，请截图联系管理员。</strong><br/>{{ deployResult ? "" : "运行信息大约需要 15 秒左右的时间加载。若长时间未出现，请联系管理员。"}}
 					</p>
 					<div
 						class="deploy-result"
 						v-html="
 							deployResult ||
-							'暂无运行信息，请等待其出现，大约需要 5~15 秒。若长时间不出现，请联系技术人员进行排查。'
+							'运行信息加载中...'
 						"
 					></div>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 		</v-expansion-panels>
-		<v-dialog max-width="400px" v-model="dialogs.createInstance">
-			<v-card>
-				<v-card-title>操作：创建实例</v-card-title>
-				<v-card-text
-					>创建一个实例并开启服务器，需要大约 5
-					分钟的时间。服务器开启以后，如果在线人数为 0 持续 6
-					小时，将会被自动释放。</v-card-text
-				>
-				<v-card-actions>
-					<v-spacer />
-					<v-btn text @click="dialogs.createInstance = false"
-						>取消</v-btn
-					>
-					<v-btn
-						class="btn-primary"
-						@click="
-							createInstance();
-							dialogs.createInstance = false;
-						"
-						>立即创建</v-btn
-					>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
 		<v-snackbar v-model="snackbar.open">{{ snackbar.text }}</v-snackbar>
 	</div>
 </template>
@@ -353,9 +387,6 @@ export default Vue.extend({
 				ip: "",
 			},
 			apiStatus: "",
-			dialogs: {
-				createInstance: false,
-			},
 			snackbar: {
 				open: false,
 				text: "",
