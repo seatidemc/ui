@@ -642,12 +642,13 @@ export default Vue.extend({
 		async autoRefresh() {
 			while (true) {
 				this.refresh();
-				this.sleep(5);
+				await this.sleep(5);
 			}
 		}
 	},
 	mounted() {
 		this.refresh();
+		this.autoRefresh();
 	},
 });
 </script>
