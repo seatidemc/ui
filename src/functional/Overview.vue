@@ -111,7 +111,7 @@
 		>
 			当前实例运行正常，但服务器处于未开启状态，可能是
 			<ul>
-				<li>服务器正在启动中。此时等待片刻，刷新页面即可。</li>
+				<li>服务器正在启动中。此时等待片刻即可。</li>
 				<li>服务器已崩溃。<strong>此时请务必联系管理员。</strong></li>
 			</ul>
 		</v-alert>
@@ -350,14 +350,17 @@
 				>
 				<v-expansion-panel-content>
 					<p>
-						你已经成功请求了实例的创建，你可以在这里查看其运行情况。<strong>如果运行失败，请截图联系管理员。</strong><br/>{{ deployResult ? "" : "运行信息大约需要 15 秒左右的时间加载。若长时间未出现，请联系管理员。"}}
+						你已经成功请求了实例的创建，你可以在这里查看其运行情况。整个过程大约需要 5 分钟左右，<strong>不建议</strong>中途刷新或者离开网页。<strong
+							>如果运行失败，请截图联系管理员。</strong
+						><br />{{
+							deployResult
+								? ""
+								: "运行信息大约需要 15 秒左右的时间加载。若长时间未出现，请联系管理员。"
+						}}
 					</p>
 					<div
 						class="deploy-result"
-						v-html="
-							deployResult ||
-							'运行信息加载中...'
-						"
+						v-html="deployResult || '运行信息加载中...'"
 					></div>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
@@ -595,44 +598,56 @@ export default Vue.extend({
 				}
 			});
 		},
+		refresh() {
+			get("/api/ecs/v1/describe/status").then((r) => {
+				if (r.data.status !== "ok") {
+					this.instance.status = translate(
+						r.data.msg as string,
+						true
+					);
+				} else {
+					this.instance.status = "正常";
+					this.instance.id = (r.data.data as any).id;
+				}
+			});
+			get("/api/server/v1/get/server").then((r) => {
+				if (r.data.status !== "ok") {
+					this.server.status = translate(r.data.msg as string, true);
+				} else {
+					if ((r.data.data as any).online === false) {
+						this.server.status = "未开启";
+					} else {
+						this.server.status = "正常";
+					}
+					this.server.ip = (r.data.data as any).ip;
+				}
+			});
+			get("/api").then((r) => {
+				if (r.data.status) {
+					if (r.data.status === "http-error") {
+						this.apiStatus = "正常";
+						return;
+					}
+				}
+				this.apiStatus = "异常";
+			});
+			get("/api/ecs/v1/describe/instance").then((r) => {
+				if (r.data.status === "ok") {
+					this.instance.info = r.data.data as InstanceInfo;
+					this.getInstanceInfoRenderList();
+				} else {
+				}
+			});
+		},
+		async autoRefresh() {
+			while (true) {
+				this.refresh();
+				this.sleep(5);
+			}
+		}
 	},
 	mounted() {
-		get("/api/ecs/v1/describe/status").then((r) => {
-			if (r.data.status !== "ok") {
-				this.instance.status = translate(r.data.msg as string, true);
-			} else {
-				this.instance.status = "正常";
-				this.instance.id = (r.data.data as any).id;
-			}
-		});
-		get("/api/server/v1/get/server").then((r) => {
-			if (r.data.status !== "ok") {
-				this.server.status = translate(r.data.msg as string, true);
-			} else {
-				if ((r.data.data as any).online === false) {
-					this.server.status = "未开启";
-				} else {
-					this.server.status = "正常";
-				}
-				this.server.ip = (r.data.data as any).ip;
-			}
-		});
-		get("/api").then((r) => {
-			if (r.data.status) {
-				if (r.data.status === "http-error") {
-					this.apiStatus = "正常";
-					return;
-				}
-			}
-			this.apiStatus = "异常";
-		});
-		get("/api/ecs/v1/describe/instance").then((r) => {
-			if (r.data.status === "ok") {
-				this.instance.info = r.data.data as InstanceInfo;
-				this.getInstanceInfoRenderList();
-			} else {
-			}
-		});
+		this.refresh();
 	},
 });
 </script>
