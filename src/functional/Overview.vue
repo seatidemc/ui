@@ -513,10 +513,10 @@ export default Vue.extend({
 								this.deployResult +=
 									"<br/>实例部署成功，Minecraft 服务器启动中。";
 								this.snackbar.text =
-									"实例部署成功，即将刷新页面。";
+									"实例部署成功。";
 								this.snackbar.open = true;
 								setTimeout(() => {
-									this.$router.go(0);
+									this.refresh();
 								}, 3000);
 							} else {
 								this.deployResult +=
@@ -557,7 +557,7 @@ export default Vue.extend({
 				} else {
 					this.snackbar.text = "成功删除实例。";
 					this.snackbar.open = true;
-					this.$router.go(0);
+					this.refresh();
 				}
 			});
 		},
@@ -573,7 +573,7 @@ export default Vue.extend({
 				} else {
 					this.snackbar.text = "成功停止实例。";
 					this.snackbar.open = true;
-					this.$router.go(0);
+					this.refresh();
 				}
 			});
 		},
@@ -594,7 +594,7 @@ export default Vue.extend({
 				} else {
 					this.snackbar.text = "成功开启实例。";
 					this.snackbar.open = true;
-					this.$router.go(0);
+					this.refresh();
 				}
 			});
 		},
@@ -606,7 +606,7 @@ export default Vue.extend({
 						true
 					);
 				} else {
-					this.instance.status = "正常";
+					this.instance.status = (r.data.data as any).status === "Running" ? "正常" : "正在启动";
 					this.instance.id = (r.data.data as any).id;
 				}
 			});
