@@ -19,6 +19,9 @@
 						<p v-if="instance.status === '实例不存在'">
 							当前实例不存在，请重新创建。
 						</p>
+						<p v-if="instance.status === '正在部署'">
+							当前实例正在部署，请稍等。
+						</p>
 						<p v-if="instance.status === '正常'">
 							当前实例运行情况正常。<br />实例 ID: {{ instance.id
 							}}<br />IP: {{ server.ip || "暂无" }}
@@ -48,7 +51,7 @@
 							{{ server.ip }}:25565
 						</p>
 						<p v-if="server.status === '未开启'">
-							服务器未开启或者正在启动中。
+							服务器未开启或者正在启动中。<br/>如果你刚刚创建了一个新的实例，此过程可能需要三到五分钟。
 						</p>
 					</v-card-text>
 				</v-card>
@@ -111,7 +114,7 @@
 		>
 			当前实例运行正常，但服务器处于未开启状态，可能是
 			<ul>
-				<li>服务器正在启动中。此时等待片刻即可。</li>
+				<li>服务器正在启动中。此时等待三到五分钟即可。</li>
 				<li>服务器已崩溃。<strong>此时请务必联系管理员。</strong></li>
 			</ul>
 		</v-alert>
@@ -606,7 +609,7 @@ export default Vue.extend({
 						true
 					);
 				} else {
-					this.instance.status = (r.data.data as any).status === "Running" ? "正常" : "正在启动";
+					this.instance.status = (r.data.data as any).status === "Running" ? "正常" : "正在部署";
 					this.instance.id = (r.data.data as any).id;
 				}
 			});
