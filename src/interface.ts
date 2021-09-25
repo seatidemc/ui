@@ -9,7 +9,6 @@ interface Dictionary {
 }
 
 interface InstanceInfo {
-	status: "loading" | "ok" | "ng";
 	bandwidth: number;
 	datadisk: InstanceDisk;
 	systemdisk: InstanceDisk;

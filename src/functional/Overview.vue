@@ -3,7 +3,7 @@
 		<h1>概览</h1>
 		<v-row>
 			<v-col cols="4">
-				<v-card :color="getColorByStatus(instance.status)" dark>
+				<v-card :class="getColorByStatus(instance.status)" dark>
 					<v-card-title>实例运行状态</v-card-title>
 					<v-card-subtitle>实例是指运行服务器的主机</v-card-subtitle>
 					<v-card-text>
@@ -17,27 +17,17 @@
 							{{ instance.status }}
 						</p>
 						<p v-if="instance.status === '实例不存在'">
-							实例不存在大多数情况下是因为长时间无人在线，被自动释放；也有可能因为库存问题被强制释放，一般重新开启即可解决。
+							当前实例不存在，请重新创建。
 						</p>
 						<p v-if="instance.status === '正常'">
 							当前实例运行情况正常。<br />实例 ID: {{ instance.id
 							}}<br />IP: {{ server.ip || "暂无" }}
 						</p>
 					</v-card-text>
-					<v-card-actions>
-						<v-spacer />
-						<v-btn
-							v-if="instance.status === '实例不存在'"
-							text
-							outlined
-							@click="dialogs.createInstance = true"
-							>解决 &raquo;</v-btn
-						>
-					</v-card-actions>
 				</v-card>
 			</v-col>
 			<v-col cols="4">
-				<v-card :color="getColorByStatus(server.status)" dark>
+				<v-card :class="getColorByStatus(server.status)" dark>
 					<v-card-title>服务器运行状态</v-card-title>
 					<v-card-subtitle>Minecraft 服务器运行状态</v-card-subtitle>
 					<v-card-text>
@@ -51,18 +41,20 @@
 							{{ server.status }}
 						</p>
 						<p v-if="server.status === '服务器不存在'">
-							服务器不存在是因为数据库中不含有服务器的 IP
-							信息。一般情况下，实例存在则服务器存在。
+							在数据库中找不到服务器的 IP。
 						</p>
 						<p v-if="server.status === '正常'">
 							当前 Minecraft 服务器运行情况正常。<br />IP:
 							{{ server.ip }}:25565
 						</p>
+						<p v-if="server.status === '未开启'">
+							服务器未开启或者正在启动中。
+						</p>
 					</v-card-text>
 				</v-card>
 			</v-col>
 			<v-col cols="4">
-				<v-card :color="getColorByStatus(apiStatus)" dark>
+				<v-card :class="getColorByStatus(apiStatus)" dark>
 					<v-card-title>API 运行状态</v-card-title>
 					<v-card-subtitle
 						>API 是操作和控制服务器的基础</v-card-subtitle
@@ -91,19 +83,42 @@
 				</v-card>
 			</v-col>
 		</v-row>
+		<v-alert
+			text
+			type="success"
+			v-if="instance.status === '正常' && server.status === '正常'"
+		>
+			太棒了！当前实例和服务器均运行正常。<br />你可以在 Minecraft 中输入
+			IP 地址 <strong>{{ server.ip }}:25565</strong> 加入游戏。
+		</v-alert>
+		<v-alert text type="warning" v-if="instance.status === '实例不存在'">
+			当前实例不存在，因为服务器超过 6
+			个小时无人在线，或者账号内资金不足。你可以点击<strong>「实例操作」->「创建实例」</strong>尝试重新开启服务器。
+		</v-alert>
+		<v-alert
+			text
+			type="error"
+			v-if="
+				instance.status === '正常' && server.status === '服务器不存在'
+			"
+		>
+			当前实例运行正常，但服务器 IP 未知，属于异常情况，请截图联系管理员。
+		</v-alert>
+		<v-alert
+			text
+			type="error"
+			v-if="instance.status === '正常' && server.status === '未开启'"
+		>
+			当前实例运行正常，但服务器处于未开启状态，可能是
+			<ul>
+				<li>服务器正在启动中。此时等待片刻，刷新页面即可。</li>
+				<li>服务器已崩溃。<strong>此时请务必联系管理员。</strong></li>
+			</ul>
+		</v-alert>
 		<v-expansion-panels class="expansions">
 			<v-expansion-panel>
-				<v-expansion-panel-header disable-icon-rotate>
-					<template #actions
-						><v-progress-circular
-							indeterminate
-							v-if="instance.info.status === 'loading'"
-							width="2"
-							size="20"
-						/><v-icon color="green" v-else
-							>mdi-check</v-icon
-						></template
-					>实例信息
+				<v-expansion-panel-header disable-icon-rotate
+					>配置
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>
 					<p>
@@ -112,7 +127,6 @@
 					<v-list
 						:dense="isSM()"
 						v-if="
-							instance.info.status === 'ok' &&
 							instance.infoRender.length > 0
 						"
 					>
@@ -325,9 +339,9 @@ export default Vue.extend({
 	data() {
 		return {
 			instance: {
-				status: "",
 				id: "",
-				info: { status: "loading" } as InstanceInfo,
+				status: "",
+				info: {} as InstanceInfo,
 				infoRender: [] as Array<{
 					name: string;
 					value: string;
@@ -352,7 +366,11 @@ export default Vue.extend({
 	},
 	methods: {
 		getColorByStatus(status: string) {
-			return status === "正常" ? "#4caf50" : "#424242";
+			return status === "正常"
+				? "color-normal"
+				: ["服务器不存在", "未开启"].includes(status)
+				? "color-error"
+				: "color-warning";
 		},
 		getInstanceInfoRenderList() {
 			let info = this.instance.info;
@@ -561,7 +579,7 @@ export default Vue.extend({
 				this.server.status = translate(r.data.msg as string, true);
 			} else {
 				if ((r.data.data as any).online === false) {
-					this.server.status = "已停止或启动中";
+					this.server.status = "未开启";
 				} else {
 					this.server.status = "正常";
 				}
@@ -580,10 +598,8 @@ export default Vue.extend({
 		get("/api/ecs/v1/describe/instance").then((r) => {
 			if (r.data.status === "ok") {
 				this.instance.info = r.data.data as InstanceInfo;
-				this.instance.info.status = "ok";
 				this.getInstanceInfoRenderList();
 			} else {
-				this.instance.info.status = "ng";
 			}
 		});
 	},
@@ -606,6 +622,18 @@ h2 {
 	padding-bottom: 0;
 }
 
+.color-normal {
+	background: linear-gradient(#4caf50, #00964b);
+}
+
+.color-warning {
+	background: linear-gradient(#fca607, #fc8a07);
+}
+
+.color-error {
+	background: linear-gradient(#f4363f, #c02b10);
+}
+
 .row {
 	align-items: stretch;
 	.v-card {
@@ -618,7 +646,7 @@ h2 {
 }
 
 .expansions {
-	margin-top: 32px;
+	margin-top: 16px;
 }
 
 .deploy-result {
@@ -656,5 +684,9 @@ h2 {
 			margin: 8px 0;
 		}
 	}
+}
+
+.row {
+	margin-bottom: 0;
 }
 </style>

@@ -35,6 +35,9 @@ export function get(url: string) {
 	});
 }
 
+/**
+ *  `withoutStop` 决定是否包含句号
+ */ 
 export function translate(str: string, withoutStop = false) {
 	let result = TRANSLATION[str];
 	if (Object.keys(TRANSLATION).includes(str)) return withoutStop ? result.slice(0, result.length - 1) : result;
