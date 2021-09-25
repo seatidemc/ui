@@ -14,7 +14,7 @@ const TRANSLATION: Dictionary = {
 	'Failed to get InstanceId.': '无法获取实例 ID。',
 	'No invocation history found.': '找不到部署执行记录。',
 	'No invocation information found.': '找不到部署执行信息。',
-	'There is already an instance recorded in the database.': '实例已存在或正在部署。'
+	'There is already an instance recorded in the database.': '实例已存在。'
 };
 
 export function post(url: string, data: any) {
