@@ -669,6 +669,7 @@ export default Vue.extend({
 					}
 					if (d.online === false) {
 						this.server.status = "未开启";
+						return;
 					} else {
 						this.server.status = "正常";
 					}
