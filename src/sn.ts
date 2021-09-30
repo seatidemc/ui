@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios/index';
 
 const ENDPOINT = 'https://seatide.leviatan.cn';
 const TRANSLATION: Dictionary = {

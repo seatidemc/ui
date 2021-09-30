@@ -11,7 +11,7 @@
 					@click="autoUpdate = !autoUpdate"
 					v-on="on"
 					v-bind="attrs"
-					>自动刷新</v-btn
+					>自动更新</v-btn
 				>
 			</template>
 			实时更新状态信息
