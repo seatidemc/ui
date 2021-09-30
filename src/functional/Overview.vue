@@ -58,7 +58,7 @@
 						<p class="display-1">
 							{{ server.status }}
 						</p>
-						<p v-if="server.status === '服务器不存在'">
+						<p v-if="server.status === '不存在'">
 							在数据库中找不到服务器的 IP。
 						</p>
 						<p v-if="server.status === '正常'">
@@ -663,6 +663,10 @@ export default Vue.extend({
 					this.server.status = translate(r.data.msg as string, true);
 				} else {
 					let d: ServerInformationFull = r.data.data as any;
+					if (d.created === false) {
+						this.server.status = "不存在";
+						return;
+					}
 					if (d.online === false) {
 						this.server.status = "未开启";
 					} else {
