@@ -126,7 +126,7 @@
 				<li>服务器已崩溃。<strong>此时请务必联系管理员。</strong></li>
 			</ul>
 		</v-alert>
-		<v-expansion-panels class="expansions">
+		<v-expansion-panels class="expansions" popout multiple>
 			<v-expansion-panel>
 				<v-expansion-panel-header> 操作 </v-expansion-panel-header>
 				<v-expansion-panel-content>
@@ -312,9 +312,7 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 			<v-expansion-panel>
-				<v-expansion-panel-header disable-icon-rotate
-					>配置
-				</v-expansion-panel-header>
+				<v-expansion-panel-header>配置 </v-expansion-panel-header>
 				<v-expansion-panel-content>
 					<p>
 						这些信息是提前预设的信息，所有新创建的实例都会基于此信息进行配置。
@@ -377,6 +375,17 @@
 					></div>
 				</v-expansion-panel-content>
 			</v-expansion-panel>
+			<v-expansion-panel v-if="server.onlinePlayers.length > 0">
+				<v-expansion-panel-header> 在线玩家&emsp;{{ server.onlinePlayers.length }} </v-expansion-panel-header>
+				<v-expansion-panel-content>
+					<div class="online-players">
+						<div class="player" v-for="(x, i) in server.onlinePlayers" :key="i">
+							<img :src="'https://crafatar.com/renders/head/' + x.id"/>
+							{{ x.name }}
+						</div>
+					</div>
+				</v-expansion-panel-content>
+			</v-expansion-panel>
 		</v-expansion-panels>
 		<v-snackbar v-model="snackbar.open">{{ snackbar.text }}</v-snackbar>
 	</div>
@@ -401,6 +410,10 @@ export default Vue.extend({
 			server: {
 				status: "",
 				ip: "",
+				onlinePlayers: [] as Array<{
+					id: string;
+					name: string;
+				}>,
 			},
 			apiStatus: "",
 			snackbar: {
@@ -630,12 +643,16 @@ export default Vue.extend({
 				if (r.data.status !== "ok") {
 					this.server.status = translate(r.data.msg as string, true);
 				} else {
-					if ((r.data.data as any).online === false) {
+					let d: ServerInformationFull = r.data.data as any;
+					if (d.online === false) {
 						this.server.status = "未开启";
 					} else {
 						this.server.status = "正常";
 					}
-					this.server.ip = (r.data.data as any).ip;
+					this.server.ip = d.ip;
+					if (d.onlinePlayersDetails !== null) {
+						this.server.onlinePlayers = d.onlinePlayersDetails;
+					}
 				}
 			});
 			get("/api").then((r) => {
@@ -658,7 +675,7 @@ export default Vue.extend({
 		async autoRefresh() {
 			while (true) {
 				if (this.autoUpdate) {
-					console.log("update")
+					console.log("update");
 					this.refresh();
 				}
 				await this.sleep(5);
@@ -668,13 +685,14 @@ export default Vue.extend({
 	mounted() {
 		this.refresh();
 		this.autoRefresh();
-		this.autoUpdate = this.$cookies.get("tl-overview-auto-update") === 'true';
+		this.autoUpdate =
+			this.$cookies.get("tl-overview-auto-update") === "true";
 	},
 	watch: {
 		autoUpdate(v) {
-			this.$cookies.set("tl-overview-auto-update", v, -1)
-		}
-	}
+			this.$cookies.set("tl-overview-auto-update", v, -1);
+		},
+	},
 });
 </script>
 
@@ -777,5 +795,26 @@ h2 {
 
 .row {
 	margin-bottom: 0;
+}
+
+.online-players {
+	display: flex;
+	align-items: center;
+	@media (max-width: 800px) {
+		flex-direction: column;
+	}
+
+	.player {
+		display: inline-flex;
+		align-items: center;
+		border-radius: 5px;
+		border: 1px solid black;
+		padding: 6px 8px;
+
+		img {
+			width: 24px;
+			margin-right: 8px;
+		}
+	}
 }
 </style>

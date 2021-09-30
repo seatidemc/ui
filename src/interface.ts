@@ -29,3 +29,30 @@ interface User {
 	nickname: string | null;
 	username: string
 }
+
+interface ServerInformationFull {
+	bestram: number,
+	created: boolean,
+	ip: string,
+	maxPlayers: number,
+	mods: {
+		name: string,
+		type: "dep" | "main" | "set" | "help",
+		bg: string,
+		desc: string
+	}[],
+	rawMods: {
+		modId: string,
+		modmarker: string
+	}[],
+	motd: string,
+	since: string,
+	term: string,
+	version: string,
+	online: boolean,
+	onlinePlayers: number,
+	onlinePlayersDetails: {
+		id: string,
+		name: string
+	}[] | null
+}
