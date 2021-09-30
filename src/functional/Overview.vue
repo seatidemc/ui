@@ -698,7 +698,6 @@ export default Vue.extend({
 		async autoRefresh() {
 			while (true) {
 				if (this.autoUpdate) {
-					console.log("update");
 					this.refresh();
 				}
 				await this.sleep(5);
