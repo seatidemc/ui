@@ -834,6 +834,7 @@ h2 {
 		border-radius: 5px;
 		border: 1px solid black;
 		padding: 6px 8px;
+		margin: 0 8px;
 
 		img {
 			width: 24px;
