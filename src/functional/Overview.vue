@@ -11,7 +11,7 @@
 					@click="autoUpdate = !autoUpdate"
 					v-on="on"
 					v-bind="attrs"
-					>自动更新</v-btn
+					>自动更新 · {{ autoUpdate ? 'ON' : 'OFF'}}</v-btn
 				>
 			</template>
 			实时更新状态信息
@@ -730,6 +730,7 @@ export default Vue.extend({
 	&.active {
 		background: #2196f3 !important;
 		color: white !important;
+		border-color: #2196f3 !important;
 	}
 }
 
