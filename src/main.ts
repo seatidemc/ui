@@ -6,10 +6,12 @@ import * as mdijs from '@mdi/js';
 
 // @ts-ignore
 import mdiVue from 'mdi-vue/v2';
+import VueCookies from 'vue-cookies';
 
 import vuetify from './plugins/vuetify';
 import { checkAdmin, checkLogin, getToken, getTokenUsername, post } from './sn';
 
+Vue.use(VueCookies);
 Vue.use(mdiVue, {
 	icons: mdijs
 });

@@ -1,6 +1,14 @@
 <template>
 	<div overview>
 		<h1>概览</h1>
+		<v-btn
+			:class="autoUpdate ? 'active' : ''"
+			color="blue"
+			outlined
+			class="auto-update-btn"
+			@click="autoUpdate = !autoUpdate"
+			>自动刷新</v-btn
+		>
 		<v-row>
 			<v-col cols="4">
 				<v-card :class="getColorByStatus(instance.status)" dark>
@@ -51,7 +59,7 @@
 							{{ server.ip }}:25565
 						</p>
 						<p v-if="server.status === '未开启'">
-							服务器未开启或者正在启动中。<br/>如果你刚刚创建了一个新的实例，此过程可能需要三到五分钟。
+							服务器未开启或者正在启动中。<br />如果你刚刚创建了一个新的实例，此过程可能需要三到五分钟。
 						</p>
 					</v-card-text>
 				</v-card>
@@ -353,7 +361,9 @@
 				>
 				<v-expansion-panel-content>
 					<p>
-						你已经成功请求了实例的创建，你可以在这里查看其运行情况。整个过程大约需要 5 分钟左右，<strong>不建议</strong>中途刷新或者离开网页。<strong
+						你已经成功请求了实例的创建，你可以在这里查看其运行情况。整个过程大约需要
+						5
+						分钟左右，<strong>不建议</strong>中途刷新或者离开网页。<strong
 							>如果运行失败，请截图联系管理员。</strong
 						><br />{{
 							deployResult
@@ -399,6 +409,7 @@ export default Vue.extend({
 			},
 			deployStatus: "" as "ok" | "loading" | "ng" | "",
 			deployResult: "",
+			autoUpdate: false,
 		};
 	},
 	methods: {
@@ -515,8 +526,7 @@ export default Vue.extend({
 							if (this.deployStatus === "ok") {
 								this.deployResult +=
 									"<br/>实例部署成功，Minecraft 服务器启动中。";
-								this.snackbar.text =
-									"实例部署成功。";
+								this.snackbar.text = "实例部署成功。";
 								this.snackbar.open = true;
 								setTimeout(() => {
 									this.refresh();
@@ -609,7 +619,10 @@ export default Vue.extend({
 						true
 					);
 				} else {
-					this.instance.status = (r.data.data as any).status === "Running" ? "正常" : "正在部署";
+					this.instance.status =
+						(r.data.data as any).status === "Running"
+							? "正常"
+							: "正在部署";
 					this.instance.id = (r.data.data as any).id;
 				}
 			});
@@ -644,19 +657,45 @@ export default Vue.extend({
 		},
 		async autoRefresh() {
 			while (true) {
-				this.refresh();
+				if (this.autoUpdate) {
+					console.log("update")
+					this.refresh();
+				}
 				await this.sleep(5);
 			}
-		}
+		},
 	},
 	mounted() {
 		this.refresh();
 		this.autoRefresh();
+		this.autoUpdate = this.$cookies.get("tl-overview-auto-update") === 'true';
 	},
+	watch: {
+		autoUpdate(v) {
+			this.$cookies.set("tl-overview-auto-update", v, -1)
+		}
+	}
 });
 </script>
 
 <style lang="less" scoped>
+.auto-update-btn {
+	position: absolute;
+	right: 32px;
+	top: 38px;
+
+	@media (max-width: 800px) {
+		right: 0;
+		top: 22px;
+	}
+	transition: all 0.2s ease;
+
+	&.active {
+		background: #2196f3 !important;
+		color: white !important;
+	}
+}
+
 .display-1 {
 	color: white;
 	font-weight: bold;
