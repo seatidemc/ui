@@ -39,6 +39,9 @@ router.beforeEach((to, from, next) => {
 	}
 });
 Vue.prototype.$isAdmin = false;
+Vue.prototype.$open = (url: string) => {
+	window.open(url);
+}
 
 new Vue({
 	router,

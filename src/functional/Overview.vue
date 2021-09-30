@@ -1,14 +1,21 @@
 <template>
 	<div overview>
 		<h1>概览</h1>
-		<v-btn
-			:class="autoUpdate ? 'active' : ''"
-			color="blue"
-			outlined
-			class="auto-update-btn"
-			@click="autoUpdate = !autoUpdate"
-			>自动刷新</v-btn
-		>
+		<v-tooltip bottom>
+			<template #activator="{ on, attrs }">
+				<v-btn
+					:class="autoUpdate ? 'active' : ''"
+					color="blue"
+					outlined
+					class="auto-update-btn"
+					@click="autoUpdate = !autoUpdate"
+					v-on="on"
+					v-bind="attrs"
+					>自动刷新</v-btn
+				>
+			</template>
+			实时更新状态信息
+		</v-tooltip>
 		<v-row>
 			<v-col cols="4">
 				<v-card :class="getColorByStatus(instance.status)" dark>
@@ -139,7 +146,8 @@
 									v-bind="attrs"
 									color="green"
 									dark
-									><v-icon>mdi-plus</v-icon>创建实例</v-btn
+									><v-icon left>mdi-plus</v-icon
+									>创建实例</v-btn
 								>
 							</template>
 							<v-list max-width="400px">
@@ -193,7 +201,7 @@
 									v-bind="attrs"
 									color="red"
 									dark
-									><v-icon>mdi-delete</v-icon
+									><v-icon left>mdi-delete</v-icon
 									>强制删除实例</v-btn
 								>
 							</template>
@@ -251,7 +259,8 @@
 									dark
 									v-on="on"
 									v-bind="attrs"
-									><v-icon>mdi-close-octagon-outline</v-icon
+									><v-icon left
+										>mdi-close-octagon-outline</v-icon
 									>停止实例</v-btn
 								>
 							</template>
@@ -306,7 +315,7 @@
 							@click="startInstance()"
 							color="blue"
 							dark
-							><v-icon>mdi-launch</v-icon>启动实例
+							><v-icon left>mdi-launch</v-icon>启动实例
 						</v-btn>
 					</div>
 				</v-expansion-panel-content>
@@ -376,11 +385,21 @@
 				</v-expansion-panel-content>
 			</v-expansion-panel>
 			<v-expansion-panel v-if="server.onlinePlayers.length > 0">
-				<v-expansion-panel-header> 在线玩家&emsp;{{ server.onlinePlayers.length }} </v-expansion-panel-header>
+				<v-expansion-panel-header>
+					在线玩家&emsp;{{ server.onlinePlayers.length}}
+				</v-expansion-panel-header>
 				<v-expansion-panel-content>
 					<div class="online-players">
-						<div class="player" v-for="(x, i) in server.onlinePlayers" :key="i">
-							<img :src="'https://crafatar.com/renders/head/' + x.id"/>
+						<div
+							class="player"
+							v-for="(x, i) in server.onlinePlayers"
+							:key="i"
+						>
+							<img
+								:src="
+									'https://crafatar.com/renders/head/' + x.id
+								"
+							/>
 							{{ x.name }}
 						</div>
 					</div>
