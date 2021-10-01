@@ -34,8 +34,8 @@
 						<p v-if="instance.status === '实例不存在'">
 							当前实例不存在，请重新创建。
 						</p>
-						<p v-if="instance.status === '正在部署'">
-							当前实例正在部署，请稍等。
+						<p v-if="instance.status === '已停止'">
+							当前实例已停止。也可能是正在进行部署，请稍等。
 						</p>
 						<p v-if="instance.status === '正常'">
 							当前实例运行情况正常。<br />实例 ID: {{ instance.id
@@ -654,7 +654,7 @@ export default Vue.extend({
 					this.instance.status =
 						(r.data.data as any).status === "Running"
 							? "正常"
-							: "正在部署";
+							: "已停止";
 					this.instance.id = (r.data.data as any).id;
 				}
 			});
