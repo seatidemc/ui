@@ -110,7 +110,7 @@
 			IP 地址 <strong>{{ server.ip }}:25565</strong> 加入游戏。
 		</v-alert>
 		<v-alert text type="warning" v-if="instance.status === '实例不存在'">
-			当前实例不存在，因为服务器超过 6
+			当前实例不存在，因为服务器超过 1
 			个小时无人在线，或者账号内资金不足。你可以点击<strong>「实例操作」->「创建实例」</strong>尝试重新开启服务器。
 		</v-alert>
 		<v-alert
