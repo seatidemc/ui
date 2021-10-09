@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router';
 
 const originalPush = VueRouter.prototype.push
 
+// @ts-ignore
 VueRouter.prototype.push = function push(location) {
   // @ts-ignore
   return originalPush.call(this, location).catch(err => err);
