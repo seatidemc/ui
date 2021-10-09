@@ -71,7 +71,7 @@ import { delToken, getTokenUsername, ltMdBreakpoint } from "@/sn";
 import Vue from "vue";
 import Overview from "@/functional/Overview.vue";
 import Users from "@/functional/Users.vue";
-// import Server from "@/functional/Server.vue";
+import Server from "@/functional/Server.vue";
 
 export default Vue.extend({
 	data() {
@@ -79,7 +79,7 @@ export default Vue.extend({
 			username: "",
 			drawer: null as null | boolean,
 			listItem: 0,
-			dict: ['overview', 'users']
+			dict: ['overview', 'users', 'server']
 		};
 	},
 	mounted() {
@@ -89,7 +89,7 @@ export default Vue.extend({
 	components: {
 		Overview,
 		Users,
-		// Server
+		Server
 	},
 	methods: {
 		logout() {

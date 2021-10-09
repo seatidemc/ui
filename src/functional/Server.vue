@@ -73,7 +73,7 @@
 				<v-expansion-panel-content>
 					下面是当前支持的对服务器的操作。
 					<div class="server-actions">
-						<v-btn class="primary" @click="commandDialog = true">
+						<v-btn disabled class="primary" @click="commandDialog = true">
 							<v-icon left>mdi-code-tags</v-icon>
 							执行指令
 						</v-btn>
@@ -141,13 +141,10 @@ export default Vue.extend({
 	methods: {
 		async getServerInfo() {
 			await this._getServer();
-            // rcon 有病，内容会重叠，把这个问题解决了逻辑就都通了
+            // TODO: 将 RCON 换成自写 HTTP 服务器
 			await this._getGc();
-            await this.sleep(1);
 			await this._getBackuptime();
-            await this.sleep(1);
 			await this._getDeltime();
-            await this.sleep(1);
 		},
 		async _getDeltime() {
 			post("/api/server/v1/action", {
@@ -158,7 +155,7 @@ export default Vue.extend({
 				if (r.data.status === "ok") {
 					// @ts-ignore
 					let deltime = r.data.data[0];
-					let time = /(\d+) 秒后/.exec(deltime);
+					let time = /实例将在 (\d+) 秒后/.exec(deltime);
 					if (time !== null) {
 						this.times.toDelete = Number(time[1]);
 					}
@@ -179,9 +176,10 @@ export default Vue.extend({
 				cmd: "seatidecore get backuptime",
 			}).then((r) => {
 				if (r.data.status === "ok") {
+                    console.log(r);
 					// @ts-ignore
 					let backuptime = r.data.data[0];
-					let time = /(\d+) 秒后/.exec(backuptime);
+					let time = /备份在 (\d+) 秒后/.exec(backuptime);
 					if (time !== null) {
 						this.times.toBackup = Number(time[1]);
 					}
@@ -243,6 +241,7 @@ export default Vue.extend({
 			}
 		},
 		execute(cmd: string) {
+            
 			post("/api/server/v1/action", {
 				type: "execute",
 				cmd,
@@ -252,6 +251,7 @@ export default Vue.extend({
 					let data = r.data.data as any;
                     let result: string = data[0];
                     result.replace("/\n/g", "<br/>")
+                    // TODO: fix 返回值重叠
 					this.commandResult +=
 						"<br/><span cmd-date>[" +
 						new Date().toTimeString().substr(0, 8) +
