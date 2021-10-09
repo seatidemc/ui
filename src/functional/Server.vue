@@ -5,9 +5,9 @@
 			实例{{ serverData.created ? "在线" : "不在线" }}
 			<v-icon>mdi-{{ serverData.created ? "check" : "close" }}</v-icon>
 		</div>
-		<div class="status-badge" :class="serverData.created ? 'on' : 'off'">
+		<div class="status-badge" :class="serverData.online ? 'on' : 'off'">
 			服务器{{ serverData.online ? "在线" : "不在线" }}
-			<v-icon>mdi-{{ serverData.created ? "check" : "close" }}</v-icon>
+			<v-icon>mdi-{{ serverData.online ? "check" : "close" }}</v-icon>
 		</div>
 		<div class="status-badge blue">自动更新 · ON</div>
 		<div class="informations">
@@ -15,27 +15,32 @@
 				<div class="name">已运行时间</div>
 				<div class="content">
 					{{
-						serverGc.uptime[0] +
-						"h " +
-						serverGc.uptime[1] +
-						"m " +
-						serverGc.uptime[2] +
-						"s"
+						serverData.online
+							? serverGc.uptime[0] +
+							  "h " +
+							  serverGc.uptime[1] +
+							  "m " +
+							  serverGc.uptime[2] +
+							  "s"
+							: "-"
 					}}
 				</div>
 			</div>
 			<div class="info-item" :class="tpsColor">
 				<div class="name">TPS</div>
 				<div class="content">
-					{{ serverGc.tps }}
+					{{ serverData.online ? serverGc.tps : "-" }}
 				</div>
 			</div>
 			<div class="info-item" :class="ramColor">
 				<div class="name">内存</div>
 				<div class="content">
-					{{ (serverGc.ram.free / 1024).toFixed(1) }}
-					<span dim>/</span>
-					{{ (serverGc.ram.used / 1024).toFixed(1) }} GB
+					<span v-if="serverData.online"
+						>{{ (serverGc.ram.free / 1024).toFixed(1) }}
+						<span dim>/</span>
+						{{ (serverGc.ram.used / 1024).toFixed(1) }} GB</span
+					>
+					<span v-else>-</span>
 				</div>
 			</div>
 		</div>
@@ -43,21 +48,26 @@
 			<div class="info-item">
 				<div class="name">玩家数量</div>
 				<div class="content">
-					{{ serverData.onlinePlayers }} <span dim>/</span>
-					{{ serverData.maxPlayers }}
+					{{ serverData.online ? serverData.onlinePlayers : "-" }}
+					<span dim>/</span>
+					{{ serverData.online ? serverData.maxPlayers : "-" }}
 				</div>
 			</div>
 			<div class="info-item">
 				<div class="name">下次备份</div>
-				<div class="content">{{ times.toBackup }} 秒后</div>
+				<div class="content">
+					{{ serverData.online ? times.toBackup + " 秒后" : "-" }}
+				</div>
 			</div>
 			<div class="info-item">
 				<div class="name">释放时间</div>
 				<div class="content">
 					{{
-						serverData.onlinePlayers > 0
-							? "暂不释放"
-							: times.toDelete + "秒后"
+						serverData.online
+							? serverData.onlinePlayers > 0
+								? "暂不释放"
+								: times.toDelete + " 秒后"
+							: "-"
 					}}
 				</div>
 			</div>
@@ -73,7 +83,7 @@
 				<v-expansion-panel-content>
 					下面是当前支持的对服务器的操作。
 					<div class="server-actions">
-						<v-btn disabled class="primary" @click="commandDialog = true">
+						<v-btn :disabled="!serverData.online" class="primary" @click="commandDialog = true">
 							<v-icon left>mdi-code-tags</v-icon>
 							执行指令
 						</v-btn>
@@ -92,6 +102,8 @@
 						type="text"
 						v-model="command"
 						counter
+						@keydown.up="getLastCommand()"
+						@keydown.down="getNextCommand()"
 					/>
 					<div class="result" v-html="commandResult" />
 				</v-card-text>
@@ -136,12 +148,14 @@ export default Vue.extend({
 			commandDialog: false,
 			command: "",
 			commandResult: "",
+			commandHistory: [] as string[],
+			lastCommandPointer: -1,
 		};
 	},
 	methods: {
 		async getServerInfo() {
 			await this._getServer();
-            // TODO: 将 RCON 换成自写 HTTP 服务器
+			// TODO: 将 RCON 换成自写 HTTP 服务器
 			await this._getGc();
 			await this._getBackuptime();
 			await this._getDeltime();
@@ -176,7 +190,6 @@ export default Vue.extend({
 				cmd: "seatidecore get backuptime",
 			}).then((r) => {
 				if (r.data.status === "ok") {
-                    console.log(r);
 					// @ts-ignore
 					let backuptime = r.data.data[0];
 					let time = /备份在 (\d+) 秒后/.exec(backuptime);
@@ -236,12 +249,11 @@ export default Vue.extend({
 		},
 		async autoUpdate() {
 			while (true) {
-				this.getServerInfo();
+				await this.getServerInfo();
 				await this.sleep(1);
 			}
 		},
 		execute(cmd: string) {
-            
 			post("/api/server/v1/action", {
 				type: "execute",
 				cmd,
@@ -249,14 +261,18 @@ export default Vue.extend({
 			}).then((r) => {
 				if (r.data.status === "ok") {
 					let data = r.data.data as any;
-                    let result: string = data[0];
-                    result.replace("/\n/g", "<br/>")
-                    // TODO: fix 返回值重叠
-					this.commandResult +=
-						"<br/><span cmd-date>[" +
+					let result: string = data[0];
+					result = result
+						.replace(/\n\n/g, "<br/>")
+						.replace(/§(\w|\d)/g, "");
+					// TODO: fix 返回值重叠
+					this.commandResult =
+						"<span class='cmd time'>[" +
 						new Date().toTimeString().substr(0, 8) +
 						"]</span> " +
-						result;
+						result +
+						this.commandResult;
+					this.command = "";
 				}
 			});
 		},
@@ -366,10 +382,12 @@ h1[title] {
 	font-family: ui-monospace, "Consolas", "Menlo", monospace;
 	color: white;
 	max-height: 400px;
-    overflow-y: scroll;
+	overflow-y: scroll;
 }
 
-[cmd-date] {
-	color: rgba(255, 255, 255, 0.5) !important;
+.cmd {
+	&.time {
+		color: rgba(255, 255, 255, 0.5) !important;
+	}
 }
 </style>
