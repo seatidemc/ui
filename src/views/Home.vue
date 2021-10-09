@@ -17,7 +17,7 @@
 					<v-list-item-group v-model="listItem">
 						<v-list-item
 							@click.native="
-								current = x.to;
+								$router.push('/' + x.to)
 								closeDrawerOptional();
 							"
 							link
@@ -71,22 +71,25 @@ import { delToken, getTokenUsername, ltMdBreakpoint } from "@/sn";
 import Vue from "vue";
 import Overview from "@/functional/Overview.vue";
 import Users from "@/functional/Users.vue";
+// import Server from "@/functional/Server.vue";
 
 export default Vue.extend({
 	data() {
 		return {
 			username: "",
 			drawer: null as null | boolean,
-			current: "overview",
 			listItem: 0,
+			dict: ['overview', 'users']
 		};
 	},
 	mounted() {
 		this.username = getTokenUsername();
+		this.listItem = this.dict.indexOf(this.current);
 	},
 	components: {
 		Overview,
 		Users,
+		// Server
 	},
 	methods: {
 		logout() {
@@ -107,15 +110,34 @@ export default Vue.extend({
 				},
 			];
 			if (this.$isAdmin) {
-				r = r.concat({
-					title: "用户管理",
-					icon: "mdi-server",
-					to: "users",
-				});
+				r = r.concat(
+					{
+						title: "用户管理",
+						icon: "mdi-server",
+						to: "users",
+					},
+					// {
+					// 	title: "服务器管理",
+					// 	icon: "mdi-minecraft",
+					// 	to: "server",
+					// }
+				);
 			}
 			return r;
 		},
 	},
+	beforeRouteEnter(to, from, next) {
+		if (to.params.current === undefined) {
+			next("/overview");
+		} else {
+			next();
+		}
+	},
+	computed: {
+		current() {
+			return this.$route.params.current;
+		}
+	}
 });
 </script>
 
