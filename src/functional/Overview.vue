@@ -1,6 +1,6 @@
 <template>
 	<div overview>
-		<h1>概览</h1>
+		<h1 title><v-icon>mdi-view-compact</v-icon>概览</h1>
 		<v-tooltip bottom>
 			<template #activator="{ on, attrs }">
 				<v-btn

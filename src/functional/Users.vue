@@ -1,6 +1,6 @@
 <template>
 	<div users>
-		<h1>用户管理</h1>
+		<h1 title><v-icon>mdi-account-box-multiple</v-icon>用户管理</h1>
 		<p>下面展示了所有的注册用户信息，你可以修改它们。</p>
 		<v-data-table v-if="verified"
 			no-results-text="暂无结果"

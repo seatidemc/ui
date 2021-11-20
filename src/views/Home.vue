@@ -72,6 +72,7 @@ import Vue from "vue";
 import Overview from "@/functional/Overview.vue";
 import Users from "@/functional/Users.vue";
 import Server from "@/functional/Server.vue";
+import Congress from '@/functional/Congress.vue'
 
 export default Vue.extend({
 	data() {
@@ -89,7 +90,8 @@ export default Vue.extend({
 	components: {
 		Overview,
 		Users,
-		Server
+		Server,
+		Congress
 	},
 	methods: {
 		logout() {
@@ -108,12 +110,17 @@ export default Vue.extend({
 					icon: "mdi-view-dashboard",
 					to: "overview",
 				},
+				{
+					title: "模组决议",
+					icon: "mdi-vote",
+					to: "congress"
+				}
 			];
 			if (this.$isAdmin) {
 				r = r.concat(
 					{
 						title: "用户管理",
-						icon: "mdi-server",
+						icon: "mdi-account-box-multiple",
 						to: "users",
 					},
 					// {

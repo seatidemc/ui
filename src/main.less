@@ -64,4 +64,34 @@ h1, h2, h3, p {
 	}
 }
 
+.main-card > div  {
+	> h1 {
+		display: flex;
+		align-items: center;
+		position: relative;
+		&::after {
+			content: " ";
+			width: 100%;
+			height: 1px;
+			background: rgba(0, 0, 0, .1);
+			position: absolute;
+			bottom: 12px;
+			left: 0;
+		}
+
+		.mdi {
+			font-size: 32px;
+			margin-right: 8px;
+			color: inherit;
+		}
+	}
+
+	> p {
+		padding: 8px 0;
+		margin: 0;
+		line-height: 1.8;
+	}
+}
+
 @primaryg: linear-gradient(135deg, rgba(255, 230, 0, 1) 0%, rgb(250, 173, 6) 70%);
+@primary: #fcd307;
