@@ -20,7 +20,7 @@
 								label="用户名"
 								:rules="[rules.required]"
 								v-model="info.username"
-								hint="建议填写 Minecraft 游戏名"
+								hint="注册时填写的 MC 游戏名"
 								type="text"
 								counter="18"
 								max-length="18"
@@ -33,6 +33,7 @@
 								hint="包含数字和字母"
 								type="password"
 								counter
+								@keydown.enter.native="submit()"
 							></v-text-field>
 						</v-form>
 					</v-tab-item>

@@ -11,6 +11,9 @@ import VueCookies from 'vue-cookies';
 import vuetify from './plugins/vuetify';
 import { checkAdmin, checkLogin, getToken, getTokenUsername, post } from './sn';
 
+Vue.prototype.$open = (url: string) => {
+	window.open(url);
+}
 Vue.use(VueCookies);
 Vue.use(mdiVue, {
 	icons: mdijs

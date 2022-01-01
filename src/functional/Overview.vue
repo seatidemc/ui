@@ -1,6 +1,6 @@
 <template>
 	<div overview>
-		<h1 title><v-icon>mdi-view-compact</v-icon>概览</h1>
+		<h1 title>概览</h1>
 		<v-tooltip bottom>
 			<template #activator="{ on, attrs }">
 				<v-btn
@@ -11,7 +11,7 @@
 					@click="autoUpdate = !autoUpdate"
 					v-on="on"
 					v-bind="attrs"
-					>自动更新 · {{ autoUpdate ? 'ON' : 'OFF'}}</v-btn
+					>实时更新 · {{ autoUpdate ? 'ON' : 'OFF'}}</v-btn
 				>
 			</template>
 			实时更新状态信息
@@ -29,7 +29,7 @@
 							indeterminate
 						/>
 						<p class="display-1">
-							{{ instance.status }}
+							<v-icon>{{ getIconByStatus(instance.status) }}</v-icon> {{ instance.status }}
 						</p>
 						<p v-if="instance.status === '实例不存在'">
 							当前实例不存在，请重新创建。
@@ -56,7 +56,7 @@
 							indeterminate
 						/>
 						<p class="display-1">
-							{{ server.status }}
+							<v-icon>{{ getIconByStatus(server.status) }}</v-icon> {{ server.status }}
 						</p>
 						<p v-if="server.status === '不存在'">
 							在数据库中找不到服务器的 IP。
@@ -84,7 +84,7 @@
 							width="2"
 							indeterminate
 						/>
-						<p class="display-1">{{ apiStatus }}</p>
+						<p class="display-1"><v-icon>{{ getIconByStatus(apiStatus) }}</v-icon> {{ apiStatus }}</p>
 						<p v-if="apiStatus === '异常'">
 							异常情况下，一切控制均无法正常操作，请及时联系技术人员解决。
 						</p>
@@ -452,6 +452,17 @@ export default Vue.extend({
 				? "color-error"
 				: "color-warning";
 		},
+		getIconByStatus(status: string) {
+			let dict = {
+				实例不存在: 'mdi-help-circle-outline',
+				不存在: 'mdi-help-circle-outline',
+				正常: 'mdi-check',
+				服务器不存在: 'mdi-alert-circle-outline',
+				未开启: 'mdi-power-plug-off-outline',
+				异常: 'mdi-close'
+			} as Dictionary
+			return dict[status];
+		},
 		getInstanceInfoRenderList() {
 			let info = this.instance.info;
 			let price = -1;
@@ -741,6 +752,16 @@ export default Vue.extend({
 .display-1 {
 	color: white;
 	font-weight: bold;
+	display: inline-flex;
+	align-items: center;
+
+	.mdi {
+		width: 40px;
+		margin-right: .5em;
+		transform: scale(1.6);
+		display: inline-flex;
+		align-items: center;
+	}
 }
 
 h2 + p {

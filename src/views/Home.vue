@@ -17,7 +17,7 @@
 					<v-list-item-group v-model="listItem">
 						<v-list-item
 							@click.native="
-								$router.push('/' + x.to)
+								$router.push('/' + x.to);
 								closeDrawerOptional();
 							"
 							link
@@ -37,7 +37,7 @@
 				</v-list>
 				<template v-slot:append>
 					<div class="pa-2">
-						<v-btn @click="logout()" color="black" block dark
+						<v-btn @click="logout()" block outlined
 							>退出登录&emsp;<v-icon
 								>mdi-exit-to-app</v-icon
 							></v-btn
@@ -45,15 +45,28 @@
 					</div>
 				</template>
 			</v-navigation-drawer>
-			<v-app-bar elevate color="black" dark app>
+			<v-app-bar elevate color="white" app>
 				<v-btn icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
-				<v-toolbar-title class="tidelab-typo">TiDELab</v-toolbar-title>
+				<v-toolbar-title class="tidelab-typo">
+					<img src="@/assets/seatide-main.svg" />
+					<span>TiDELab</span>
+				</v-toolbar-title>
 				<v-spacer />
-				<v-btn icon>
-					<v-icon>mdi-help-circle-outline</v-icon>
-				</v-btn>
+				<v-tooltip left>
+					<template v-slot:activator="{ on, attrs }">
+						<v-btn
+							v-bind="attrs"
+							v-on="on"
+							@click="$open('https://seatide.top')"
+							icon
+						>
+							<v-icon>mdi-launch</v-icon>
+						</v-btn>
+					</template>
+					<span>前往官网</span>
+				</v-tooltip>
 			</v-app-bar>
 			<v-main>
 				<v-container>
@@ -72,7 +85,6 @@ import Vue from "vue";
 import Overview from "@/functional/Overview.vue";
 import Users from "@/functional/Users.vue";
 import Server from "@/functional/Server.vue";
-import Congress from '@/functional/Congress.vue'
 
 export default Vue.extend({
 	data() {
@@ -80,7 +92,7 @@ export default Vue.extend({
 			username: "",
 			drawer: null as null | boolean,
 			listItem: 0,
-			dict: ['overview', 'users', 'server']
+			dict: ["overview", "users", "server"],
 		};
 	},
 	mounted() {
@@ -91,7 +103,6 @@ export default Vue.extend({
 		Overview,
 		Users,
 		Server,
-		Congress
 	},
 	methods: {
 		logout() {
@@ -110,11 +121,6 @@ export default Vue.extend({
 					icon: "mdi-view-dashboard",
 					to: "overview",
 				},
-				{
-					title: "模组决议",
-					icon: "mdi-vote",
-					to: "congress"
-				}
 			];
 			if (this.$isAdmin) {
 				r = r.concat(
@@ -122,7 +128,7 @@ export default Vue.extend({
 						title: "用户管理",
 						icon: "mdi-account-box-multiple",
 						to: "users",
-					},
+					}
 					// {
 					// 	title: "服务器管理",
 					// 	icon: "mdi-minecraft",
@@ -143,8 +149,8 @@ export default Vue.extend({
 	computed: {
 		current() {
 			return this.$route.params.current;
-		}
-	}
+		},
+	},
 });
 </script>
 
@@ -158,10 +164,33 @@ export default Vue.extend({
 
 .main-card {
 	padding: 16px 32px;
+	margin-top: 32px;
 
 	@media (max-width: 800px) {
 		box-shadow: none !important;
 		padding: 0;
 	}
+}
+
+.tidelab-typo {
+	display: inline-flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	padding: 0 !important;
+	img {
+		height: 38px;
+	}
+	span {
+		margin-left: 0.5em;
+		font-style: "SF Pro Display", "Inter", Segoe UI, sans-serif;
+		font-weight: 600;
+		color: rgba(0, 0, 0, 0.75);
+		font-size: 26px;
+		&::selection {
+			background: transparent;
+			pointer-events: none;
+		}
+	}
+	cursor: pointer;
 }
 </style>

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios/index';
 
-const ENDPOINT = 'http://localhost:8080';
+const ENDPOINT = 'https://seatide.leviatan.cn';
 const TRANSLATION: Dictionary = {
 	'User not exists.': '用户不存在。',
 	'Invalid action.': '无效操作。',
