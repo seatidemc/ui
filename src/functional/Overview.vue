@@ -788,6 +788,9 @@ h2 {
 	line-height: 1.2;
 	font-family: ui-monospace, "Consolas", "Menlo", monospace;
 	font-size: 14px;
+	overflow-y: scroll;
+	max-height: 400px;
+	overflow-x: hidden;
 }
 
 .col {
