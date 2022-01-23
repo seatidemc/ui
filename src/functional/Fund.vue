@@ -94,6 +94,7 @@
 			:server-items-length="fundTable.total"
 			hide-default-footer
 			:items-per-page="fundTable.options.itemsPerPage"
+			loader-height="2px"
 		>
 			<template #top>
 				<div class="config mx-4 pt-4">
