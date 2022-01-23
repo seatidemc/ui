@@ -156,7 +156,7 @@
 				</v-icon>
 			</template>
 		</v-data-table>
-		<v-pagination v-if="totalPages > 1" v-model="paginPage" :length="totalPages"></v-pagination>
+		<v-pagination style="padding: 16px 0" v-if="totalPages > 1" v-model="paginPage" :length="totalPages"></v-pagination>
 		<v-snackbar v-model="snackbar">
 			{{ snackbarText }}
 		</v-snackbar>
@@ -164,7 +164,7 @@
 </template>
 
 <script lang="ts">
-import { checkAdmin, get, getToken, post } from "@/sn";
+import { checkAdmin, get, getToken, post } from "@/fn";
 import Vue from "vue";
 export default Vue.extend({
 	data() {

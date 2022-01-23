@@ -1,3 +1,6 @@
+@import '~@/wechatsans.css';
+@import '~@/mc.less';
+
 body {
 	margin: 0;
 	scroll-behavior: smooth;
@@ -21,14 +24,47 @@ body {
 	@media screen and (max-width: 1200px) {
 		padding: 64px;
 	}
-    position: relative;
-    height: 100%;
+	position: relative;
+	height: 100%;
+}
+
+.empty {
+	width: 100%;
+	text-align: center;
+	color: rgba(0, 0, 0, .5);
+	font-size: 20px;
+	padding: 32px 0;
+	border: 1px dashed rgba(0,0,0,.21);
+	display: block;
+	border-radius: 5px;
+}
+
+.typo {
+	line-height: 1.7;
+	p {
+		margin: 0;
+		padding: 8px 0;
+	}
+}
+
+.v-dialog {
+	.v-card__text {
+		color: black !important;
+		font-size: 16px;
+		.typo;
+	}
+
+	.v-card__title {
+		font-size: 24px !important;
+		padding-top: 32px !important;
+		padding-bottom: 16px !important;
+	}
 }
 
 .center-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	flex-direction: column;
 }
 
@@ -38,42 +74,43 @@ body {
 	position: relative;
 }
 
-h1, h2, h3, p {
-    margin: 0;
-    padding: 16px 0;
+h1 {
+	margin: 0;
+	padding: 16px 0;
 }
 
+
 *::selection {
-    background: rgba(#fcd307, .15);
+	background: rgba(#fcd307, 0.15);
 }
 
 .primary-text {
-    background: @primaryg;
-    background-clip: text;
-    color: transparent;
+	background: @primaryg;
+	background-clip: text;
+	color: transparent;
 }
 
 .btn-primary {
 	color: white !important;
 	background: @primaryg;
 	&[disabled] {
-		background: rgba(0, 0, 0, .21);
+		background: rgba(0, 0, 0, 0.21);
 	}
 	&.shadowed {
-		box-shadow: 0 3px 5px rgba(0, 0, 0, .21);
+		box-shadow: 0 3px 5px rgba(0, 0, 0, 0.21);
 	}
 }
 
-.main-card > div  {
+.main-card > div {
 	> h1 {
 		display: flex;
 		align-items: center;
 		position: relative;
 		&::after {
-			content: " ";
+			content: ' ';
 			width: 100%;
 			height: 1px;
-			background: rgba(0, 0, 0, .1);
+			background: rgba(0, 0, 0, 0.1);
 			position: absolute;
 			bottom: 12px;
 			left: 0;
@@ -90,6 +127,26 @@ h1, h2, h3, p {
 		padding: 8px 0;
 		margin: 0;
 		line-height: 1.8;
+	}
+}
+
+.money {
+	font-family: 'WeChatSans';
+}
+
+.withcolor {
+	.money {
+		&.high-expense {
+			color: #e53935;
+		}
+
+		&.mid-expense {
+			color: @primary;
+		}
+
+		&.income {
+			color: #43a047;
+		}
 	}
 }
 

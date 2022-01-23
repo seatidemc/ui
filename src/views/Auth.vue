@@ -107,7 +107,7 @@ import {
 	post,
 	setToken,
 	translate,
-} from "@/sn";
+} from "@/fn";
 
 export default Vue.extend({
 	data() {

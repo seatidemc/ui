@@ -9,7 +9,7 @@ import mdiVue from 'mdi-vue/v2';
 import VueCookies from 'vue-cookies';
 
 import vuetify from './plugins/vuetify';
-import { checkAdmin, checkLogin, getToken, getTokenUsername, post } from './sn';
+import { checkAdmin, checkLogin, getToken, getTokenUsername, post } from './fn';
 
 Vue.prototype.$open = (url: string) => {
 	window.open(url);

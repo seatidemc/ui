@@ -1,21 +1,201 @@
 <template>
 	<div overview>
 		<h1 title>概览</h1>
-		<v-tooltip bottom>
-			<template #activator="{ on, attrs }">
-				<v-btn
-					:class="autoUpdate ? 'active' : ''"
-					color="blue"
-					outlined
-					class="auto-update-btn"
-					@click="autoUpdate = !autoUpdate"
-					v-on="on"
-					v-bind="attrs"
-					>实时更新 · {{ autoUpdate ? 'ON' : 'OFF'}}</v-btn
-				>
-			</template>
-			实时更新状态信息
-		</v-tooltip>
+		<div class="top-bar">
+			<v-tooltip bottom>
+				<template #activator="{ on, attrs }">
+					<v-btn
+						:class="autoUpdate ? 'active' : ''"
+						color="blue"
+						outlined
+						class="auto-update-btn elevation-2"
+						@click="autoUpdate = !autoUpdate"
+						v-on="on"
+						v-bind="attrs"
+						:icon="isSM()"
+						>{{ !isSM() ? ("实时更新 · " + (autoUpdate ? "ON" : "OFF")) : "" }} <v-icon v-if="isSM()">mdi-update</v-icon></v-btn
+					>
+				</template>
+				实时更新状态信息
+			</v-tooltip>
+			<v-menu>
+				<template v-slot:activator="{ on, attrs }">
+					<v-btn
+						:icon="isSM()"
+						elevation="2"
+						v-on="on"
+						v-bind="attrs"
+						class="green"
+						dark
+						><v-icon :left="!isSM()">mdi-plus</v-icon
+						>{{ isSM() ? "" : "创建实例" }}</v-btn
+					>
+				</template>
+				<v-list max-width="400px">
+					<v-list-item>
+						<v-list-item-icon
+							><v-icon
+								>mdi-help-circle-outline</v-icon
+							></v-list-item-icon
+						>
+						<v-list-item-content>
+							<v-list-item-title>
+								是否立即创建实例？
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+					<v-list-item
+						@click="createInstance()"
+						style="color: #4caf50"
+						link
+					>
+						<v-list-item-icon
+							><v-icon style="color: #4caf50"
+								>mdi-arrow-right</v-icon
+							></v-list-item-icon
+						>
+						<v-list-item-content>
+							<v-list-item-title>继续</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+					<v-list-item link>
+						<v-list-item-icon
+							><v-icon>mdi-close</v-icon></v-list-item-icon
+						>
+						<v-list-item-content>
+							<v-list-item-title>取消</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+				</v-list>
+			</v-menu>
+			<v-menu>
+								<template v-slot:activator="{ on, attrs }">
+									<v-btn
+										v-if="$isAdmin"
+										v-on="on"
+										v-bind="attrs"
+										dark
+										icon
+										class="elevation-1 red"
+										><v-icon>mdi-delete</v-icon></v-btn
+									>
+								</template>
+								<v-list max-width="400px">
+									<v-list-item>
+										<v-list-item-icon
+											><v-icon style="color: #f44336"
+												>mdi-message-alert</v-icon
+											></v-list-item-icon
+										>
+										<v-list-item-content>
+											<v-list-item-title>
+												警告：强制删除实例<strong
+													>不<br />会进行备份</strong
+												>。<br />请确保服务器保有每<br />
+												10 分钟一次的计划备<br />份，以防后患。
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+									<v-list-item
+										@click="deleteInstance()"
+										style="color: #f44336"
+										link
+									>
+										<v-list-item-icon
+											><v-icon style="color: #f44336"
+												>mdi-check</v-icon
+											></v-list-item-icon
+										>
+										<v-list-item-content>
+											<v-list-item-title
+												>继续</v-list-item-title
+											>
+										</v-list-item-content>
+									</v-list-item>
+									<v-list-item link>
+										<v-list-item-icon
+											><v-icon
+												>mdi-close</v-icon
+											></v-list-item-icon
+										>
+										<v-list-item-content>
+											<v-list-item-title
+												>取消</v-list-item-title
+											>
+										</v-list-item-content>
+									</v-list-item>
+								</v-list>
+							</v-menu>
+							<v-menu>
+								<template v-slot:activator="{ on, attrs }">
+									<v-btn
+										v-if="$isAdmin"
+										
+										v-on="on"
+										v-bind="attrs"
+										icon
+										class="red elevation-1"
+										dark
+										><v-icon
+											>mdi-close-octagon-outline</v-icon
+										></v-btn
+									>
+								</template>
+								<v-list max-width="400px">
+									<v-list-item>
+										<v-list-item-icon
+											><v-icon style="color: #f44336"
+												>mdi-message-alert</v-icon
+											></v-list-item-icon
+										>
+										<v-list-item-content>
+											<v-list-item-title>
+												警告：停止实例并<strong
+													>不<br />会正常关闭服务器</strong
+												>。<br />极有可能造成存档损<br />坏。请确保服务器保<br />有每
+												10 分钟一次的计<br />划备份，以防后患。
+											</v-list-item-title>
+										</v-list-item-content>
+									</v-list-item>
+									<v-list-item
+										@click="stopInstance()"
+										style="color: #f44336"
+										link
+									>
+										<v-list-item-icon
+											><v-icon style="color: #f44336"
+												>mdi-check</v-icon
+											></v-list-item-icon
+										>
+										<v-list-item-content>
+											<v-list-item-title
+												>继续</v-list-item-title
+											>
+										</v-list-item-content>
+									</v-list-item>
+									<v-list-item link>
+										<v-list-item-icon
+											><v-icon
+												>mdi-close</v-icon
+											></v-list-item-icon
+										>
+										<v-list-item-content>
+											<v-list-item-title
+												>取消</v-list-item-title
+											>
+										</v-list-item-content>
+									</v-list-item>
+								</v-list>
+							</v-menu>
+							<v-btn
+								v-if="$isAdmin"
+								@click="startInstance()"
+								class="elevation-1 blue"
+								icon
+								dark
+								><v-icon>mdi-launch</v-icon>
+							</v-btn>
+		</div>
 		<v-row>
 			<v-col cols="4">
 				<v-card :class="getColorByStatus(instance.status)" dark>
@@ -29,7 +209,10 @@
 							indeterminate
 						/>
 						<p class="display-1">
-							<v-icon>{{ getIconByStatus(instance.status) }}</v-icon> {{ instance.status }}
+							<v-icon>{{
+								getIconByStatus(instance.status)
+							}}</v-icon>
+							{{ instance.status }}
 						</p>
 						<p v-if="instance.status === '实例不存在'">
 							当前实例不存在，请重新创建。
@@ -56,7 +239,10 @@
 							indeterminate
 						/>
 						<p class="display-1">
-							<v-icon>{{ getIconByStatus(server.status) }}</v-icon> {{ server.status }}
+							<v-icon>{{
+								getIconByStatus(server.status)
+							}}</v-icon>
+							{{ server.status }}
 						</p>
 						<p v-if="server.status === '不存在'">
 							在数据库中找不到服务器的 IP。
@@ -84,13 +270,17 @@
 							width="2"
 							indeterminate
 						/>
-						<p class="display-1"><v-icon>{{ getIconByStatus(apiStatus) }}</v-icon> {{ apiStatus }}</p>
+						<p class="display-1">
+							<v-icon>{{ getIconByStatus(apiStatus) }}</v-icon>
+							{{ apiStatus }}
+						</p>
 						<p v-if="apiStatus === '异常'">
 							异常情况下，一切控制均无法正常操作，请及时联系技术人员解决。
 						</p>
 						<p v-if="apiStatus === '正常'">
 							当前 API 状态正常，可以正确地执行和处理操作。<br />API
 							地址：<a
+								style="color: inherit"
 								href="https://seatide.leviatan.cn"
 								target="_blank"
 								>https://seatide.leviatan.cn</a
@@ -133,240 +323,15 @@
 				<li>服务器已崩溃。<strong>此时请务必联系管理员。</strong></li>
 			</ul>
 		</v-alert>
-		<v-expansion-panels class="expansions" popout multiple>
-			<v-expansion-panel>
-				<v-expansion-panel-header> 操作 </v-expansion-panel-header>
-				<v-expansion-panel-content>
-					<p>这里列出了你可以对实例进行的操作。</p>
-					<div class="instance-action">
-						<v-menu>
-							<template v-slot:activator="{ on, attrs }">
-								<v-btn
-									v-on="on"
-									v-bind="attrs"
-									color="green"
-									dark
-									><v-icon left>mdi-plus</v-icon
-									>创建实例</v-btn
-								>
-							</template>
-							<v-list max-width="400px">
-								<v-list-item>
-									<v-list-item-icon
-										><v-icon
-											>mdi-help-circle-outline</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title>
-											是否立即创建实例？
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-								<v-list-item
-									@click="createInstance()"
-									style="color: #4caf50"
-									link
-								>
-									<v-list-item-icon
-										><v-icon style="color: #4caf50"
-											>mdi-arrow-right</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title
-											>继续</v-list-item-title
-										>
-									</v-list-item-content>
-								</v-list-item>
-								<v-list-item link>
-									<v-list-item-icon
-										><v-icon
-											>mdi-close</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title
-											>取消</v-list-item-title
-										>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-						</v-menu>
-						<v-menu>
-							<template v-slot:activator="{ on, attrs }">
-								<v-btn
-									:disabled="!$isAdmin"
-									v-on="on"
-									v-bind="attrs"
-									color="red"
-									dark
-									><v-icon left>mdi-delete</v-icon
-									>强制删除实例</v-btn
-								>
-							</template>
-							<v-list max-width="400px">
-								<v-list-item>
-									<v-list-item-icon
-										><v-icon style="color: #f44336"
-											>mdi-message-alert</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title>
-											警告：强制删除实例<strong
-												>不<br />会进行备份</strong
-											>。<br />请确保服务器保有每<br />
-											10 分钟一次的计划备<br />份，以防后患。
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-								<v-list-item
-									@click="deleteInstance()"
-									style="color: #f44336"
-									link
-								>
-									<v-list-item-icon
-										><v-icon style="color: #f44336"
-											>mdi-check</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title
-											>继续</v-list-item-title
-										>
-									</v-list-item-content>
-								</v-list-item>
-								<v-list-item link>
-									<v-list-item-icon
-										><v-icon
-											>mdi-close</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title
-											>取消</v-list-item-title
-										>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-						</v-menu>
-						<v-menu>
-							<template v-slot:activator="{ on, attrs }">
-								<v-btn
-									:disabled="!$isAdmin"
-									color="pink"
-									dark
-									v-on="on"
-									v-bind="attrs"
-									><v-icon left
-										>mdi-close-octagon-outline</v-icon
-									>停止实例</v-btn
-								>
-							</template>
-							<v-list max-width="400px">
-								<v-list-item>
-									<v-list-item-icon
-										><v-icon style="color: #f44336"
-											>mdi-message-alert</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title>
-											警告：停止实例并<strong
-												>不<br />会正常关闭服务器</strong
-											>。<br />极有可能造成存档损<br />坏。请确保服务器保<br />有每
-											10 分钟一次的计<br />划备份，以防后患。
-										</v-list-item-title>
-									</v-list-item-content>
-								</v-list-item>
-								<v-list-item
-									@click="stopInstance()"
-									style="color: #f44336"
-									link
-								>
-									<v-list-item-icon
-										><v-icon style="color: #f44336"
-											>mdi-check</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title
-											>继续</v-list-item-title
-										>
-									</v-list-item-content>
-								</v-list-item>
-								<v-list-item link>
-									<v-list-item-icon
-										><v-icon
-											>mdi-close</v-icon
-										></v-list-item-icon
-									>
-									<v-list-item-content>
-										<v-list-item-title
-											>取消</v-list-item-title
-										>
-									</v-list-item-content>
-								</v-list-item>
-							</v-list>
-						</v-menu>
-						<v-btn
-							:disabled="!$isAdmin"
-							@click="startInstance()"
-							color="blue"
-							dark
-							><v-icon left>mdi-launch</v-icon>启动实例
-						</v-btn>
-					</div>
-				</v-expansion-panel-content>
-			</v-expansion-panel>
-			<v-expansion-panel>
-				<v-expansion-panel-header>配置 </v-expansion-panel-header>
-				<v-expansion-panel-content>
-					<p>
-						这些信息是提前预设的信息，所有新创建的实例都会基于此信息进行配置。
-					</p>
-					<v-list
-						:dense="isSM()"
-						v-if="instance.infoRender.length > 0"
-					>
-						<v-list-item
-							v-for="(x, i) in instance.infoRender"
-							:key="i"
-						>
-							<v-list-item-icon
-								><v-icon
-									>mdi-{{ x.icon }}</v-icon
-								></v-list-item-icon
-							>
-							<v-list-item-content>
-								<v-list-item-title>{{
-									x.value
-								}}</v-list-item-title>
-								<v-list-item-subtitle>{{
-									x.name
-								}}</v-list-item-subtitle>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
-				</v-expansion-panel-content>
-			</v-expansion-panel>
-			<v-expansion-panel v-if="deployStatus.length > 0">
-				<v-expansion-panel-header disable-icon-rotate
-					><template #actions
-						><v-progress-circular
-							indeterminate
-							v-if="deployStatus === 'loading'"
-							width="2"
-							size="20"
-						/><v-icon v-if="deployStatus === 'ok'" color="green"
-							>mdi-check</v-icon
-						><v-icon v-if="deployStatus === 'ng'" color="red"
-							>mdi-close</v-icon
-						></template
-					>部署情况</v-expansion-panel-header
-				>
-				<v-expansion-panel-content>
+		<h1>服务器 MOTD{{ server.onlinePlayers.length !== 0 ? '（' + server.onlinePlayers.length + '/50 在线）': ''}}</h1>
+		<div v-if="motdHtml" v-html="motdHtml" />
+		<div v-else class="empty">
+			服务器尚未开启
+		</div>
+		<v-dialog max-width="700px" v-model="deployDialog">
+			<v-card>
+				<v-card-title>部署情况</v-card-title>
+				<v-card-text>
 					<p>
 						你已经成功请求了实例的创建，你可以在这里查看其运行情况。整个过程大约需要
 						5
@@ -382,37 +347,25 @@
 						class="deploy-result"
 						v-html="deployResult || '运行信息加载中...'"
 					></div>
-				</v-expansion-panel-content>
-			</v-expansion-panel>
-			<v-expansion-panel v-if="server.onlinePlayers.length > 0">
-				<v-expansion-panel-header>
-					在线玩家&emsp;{{ server.onlinePlayers.length}}
-				</v-expansion-panel-header>
-				<v-expansion-panel-content>
-					<div class="online-players">
-						<div
-							class="player"
-							v-for="(x, i) in server.onlinePlayers"
-							:key="i"
-						>
-							<img
-								:src="
-									'https://crafatar.com/renders/head/' + x.id
-								"
-							/>
-							{{ x.name }}
-						</div>
-					</div>
-				</v-expansion-panel-content>
-			</v-expansion-panel>
-		</v-expansion-panels>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer />
+					<v-btn class="primary" @click="deployDialog = false"
+						>关闭</v-btn
+					>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 		<v-snackbar v-model="snackbar.open">{{ snackbar.text }}</v-snackbar>
 	</div>
 </template>
 
 <script lang="ts">
-import { get, getToken, post, translate, isSM } from "@/sn";
+import { get, getToken, post, translate, isSM } from "@/fn";
 import Vue from "vue";
+// @ts-ignore
+import Motd from "mcmotdparser";
+
 export default Vue.extend({
 	data() {
 		return {
@@ -442,6 +395,8 @@ export default Vue.extend({
 			deployStatus: "" as "ok" | "loading" | "ng" | "",
 			deployResult: "",
 			autoUpdate: false,
+			deployDialog: false,
+			motdHtml: "",
 		};
 	},
 	methods: {
@@ -454,63 +409,14 @@ export default Vue.extend({
 		},
 		getIconByStatus(status: string) {
 			let dict = {
-				实例不存在: 'mdi-help-circle-outline',
-				不存在: 'mdi-help-circle-outline',
-				正常: 'mdi-check',
-				服务器不存在: 'mdi-alert-circle-outline',
-				未开启: 'mdi-power-plug-off-outline',
-				异常: 'mdi-close'
-			} as Dictionary
+				实例不存在: "mdi-help-circle-outline",
+				不存在: "mdi-help-circle-outline",
+				正常: "mdi-check",
+				服务器不存在: "mdi-alert-circle-outline",
+				未开启: "mdi-power-plug-off-outline",
+				异常: "mdi-close",
+			} as Dictionary;
 			return dict[status];
-		},
-		getInstanceInfoRenderList() {
-			let info = this.instance.info;
-			let price = -1;
-			get("/api/ecs/v1/describe/price").then((r) => {
-				if (r.data.status === "ok") {
-					price = r.data.data as number;
-				}
-				this.instance.infoRender = [
-					{
-						name: "实例类型",
-						value: info.type,
-						icon: "server",
-					},
-					{
-						name: "峰值带宽",
-						value: info.bandwidth + "Mbps",
-						icon: "web",
-					},
-					{
-						name: "系统盘",
-						value:
-							info.systemdisk.type +
-							" " +
-							info.systemdisk.size +
-							"GB",
-						icon: "harddisk",
-					},
-					{
-						name: "数据盘",
-						value:
-							info.datadisk.type +
-							" " +
-							info.datadisk.size +
-							"GB",
-						icon: "harddisk",
-					},
-					{
-						name: "地域",
-						value: info.zone,
-						icon: "map-marker",
-					},
-					{
-						name: "首小时价格",
-						value: "￥" + price,
-						icon: "cash",
-					},
-				];
-			});
 		},
 		createInstance() {
 			this.snackbar.text = "正在请求中，请稍等...";
@@ -528,6 +434,7 @@ export default Vue.extend({
 					this.snackbar.open = true;
 					this.deployStatus = "loading";
 					this.getDeployResult();
+					this.deployDialog = true;
 				}
 			});
 		},
@@ -612,6 +519,7 @@ export default Vue.extend({
 					return;
 				} else {
 					this.snackbar.text = "成功删除实例。";
+					this.motdHtml = "";
 					this.snackbar.open = true;
 					this.refresh();
 				}
@@ -628,6 +536,7 @@ export default Vue.extend({
 					return;
 				} else {
 					this.snackbar.text = "成功停止实例。";
+					this.motdHtml = ""
 					this.snackbar.open = true;
 					this.refresh();
 				}
@@ -699,13 +608,7 @@ export default Vue.extend({
 				}
 				this.apiStatus = "异常";
 			});
-			get("/api/ecs/v1/describe/instance").then((r) => {
-				if (r.data.status === "ok") {
-					this.instance.info = r.data.data as InstanceInfo;
-					this.getInstanceInfoRenderList();
-				} else {
-				}
-			});
+			this.getMotd();
 		},
 		async autoRefresh() {
 			while (true) {
@@ -714,6 +617,16 @@ export default Vue.extend({
 				}
 				await this.sleep(5);
 			}
+		},
+		getMotd() {
+			get("/api/server/v1/get/server").then((r) => {
+				if (r.data.data !== null) {
+					//@ts-ignore
+					Motd.toHtml(r.data.data.motd, (err, res) => {
+						this.motdHtml = res;
+					});
+				}
+			});
 		},
 	},
 	mounted() {
@@ -731,15 +644,21 @@ export default Vue.extend({
 </script>
 
 <style lang="less" scoped>
-.auto-update-btn {
+.top-bar {
 	position: absolute;
 	right: 32px;
 	top: 38px;
-
+	display: grid;
+	align-items: center;
+	grid-auto-flow: column;
+	grid-column-gap: 16px;
 	@media (max-width: 800px) {
 		right: 0;
 		top: 22px;
 	}
+}
+
+.auto-update-btn {
 	transition: all 0.2s ease;
 
 	&.active {
@@ -754,24 +673,15 @@ export default Vue.extend({
 	font-weight: bold;
 	display: inline-flex;
 	align-items: center;
+	margin: 28px 0;
 
 	.mdi {
 		width: 40px;
-		margin-right: .5em;
+		margin-right: 0.5em;
 		transform: scale(1.6);
 		display: inline-flex;
 		align-items: center;
 	}
-}
-
-h2 + p {
-	padding: 0;
-	color: rgba(0, 0, 0, 0.4);
-}
-
-h2 {
-	padding-top: 16px;
-	padding-bottom: 0;
 }
 
 .color-normal {
@@ -814,6 +724,28 @@ h2 {
 	overflow-x: hidden;
 }
 
+.actions {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	@media (max-width: 800px) {
+		margin-top: 32px;
+	}
+
+	@media (min-width: 800px) {
+		position: absolute;
+		bottom: 16px;
+	}
+	> .v-btn {
+		margin: 0 8px;
+		&:first-child {
+			margin-left: 0;
+		}
+		background: white;
+		
+	}
+}
+
 .col {
 	@media (max-width: 1040px) {
 		max-width: 100% !important;
@@ -848,9 +780,8 @@ h2 {
 .online-players {
 	display: flex;
 	align-items: center;
-	@media (max-width: 800px) {
-		flex-direction: column;
-	}
+	flex-direction: row;
+	padding: 5px;
 
 	.player {
 		display: inline-flex;
@@ -858,7 +789,7 @@ h2 {
 		border-radius: 5px;
 		border: 1px solid black;
 		padding: 6px 8px;
-		margin: 0 8px;
+		margin: 5px;
 
 		img {
 			width: 24px;

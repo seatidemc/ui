@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts">
-import { get, getToken, post } from "@/sn";
+import { get, getToken, post } from "@/fn";
 import Vue from "vue";
 
 export interface ServerInformationGc {
@@ -313,7 +313,7 @@ h1[title] {
 }
 
 .status-badge {
-	margin-left: 16px;
+	margin-right: 8px;
 	border: 1px solid;
 	border-radius: 5px;
 	padding: 4px 8px;
@@ -363,6 +363,12 @@ h1[title] {
 		background: black;
 		padding: 8px 0;
 		border-radius: 5px;
+		&:nth-child(3n) {
+			margin-right: 0;
+		}
+		&:nth-child(3n+1) {
+			margin-left: 0;
+		}
 		.name,
 		[dim] {
 			color: rgba(255, 255, 255, 0.6);
