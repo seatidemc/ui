@@ -258,16 +258,11 @@ export default Vue.extend({
 				result.push({
 					amount: (k.flow === "Expense" ? "-" : "+") + k.amount,
 					type: match[k.type] || "账号",
-					date: this.formatTime(new Date(k.date)),
+					date: this.formatDate(k.date),
 					flow: k.flow,
 				});
 			});
 			return result;
-		},
-		formatTime(date: Date) {
-			const offsetMs = date.getTimezoneOffset() * 60 * 1000;
-			const dateLocal = new Date(date.getTime() - offsetMs);
-			return dateLocal.toISOString().slice(0, 19).replace("T", " ");
 		},
 		getBalance() {
 			get("/api/info/v1/describe/balance").then((r) => {
@@ -277,7 +272,7 @@ export default Vue.extend({
 			});
 		},
 		async updateStatistics() {
-			let date = moment();
+			let date = moment().utc();
 			let [year, month, day] = [
 				date.year(),
 				date.month() + 1,
@@ -384,7 +379,7 @@ export default Vue.extend({
 		isSM,
 		formatDate(date: string) {
 			if (!!!date) return "loading..."
-			return moment(date).format("YYYY-MM-DD HH:mm:ss")
+			return moment(date).utc().format("YYYY-MM-DD HH:mm:ss")
 		}
 	},
 	watch: {
