@@ -57,19 +57,29 @@
 				</div>
 				<div class="item">
 					<strong>30 天内最高单次消费</strong>
-					<span class="money">{{
-						statistics.top30 === 0
-							? "..."
-							: "￥" + statistics.top30.toFixed(2)
-					}}</span>
+					<v-tooltip bottom>
+						<template v-slot:activator="{ on, attrs }">
+							<span v-on="on" v-bind="attrs" class="money">{{
+								statistics.top30 === 0
+									? "..."
+									: "￥" + statistics.top30.toFixed(2)
+							}}</span>
+						</template>
+						{{ formatDate(statistics.top30raw.date) }}
+					</v-tooltip>
 				</div>
 				<div class="item">
 					<strong>历史最高单次消费</strong>
-					<span class="money">{{
-						statistics.top === 0
-							? "..."
-							: "￥" + statistics.top.toFixed(2)
-					}}</span>
+					<v-tooltip bottom>
+						<template v-slot:activator="{ on, attrs }">
+							<span v-on="on" v-bind="attrs" class="money">{{
+								statistics.top === 0
+									? "..."
+									: "￥" + statistics.top.toFixed(2)
+							}}</span>
+						</template>
+						{{ formatDate(statistics.topraw.date) }}
+					</v-tooltip>
 				</div>
 			</div>
 		</div>
@@ -113,7 +123,6 @@
 			</template>
 			<template #footer>
 				<v-pagination
-
 					class="pagination"
 					v-if="totalPages > 1"
 					v-model="fundTable.options.page"
@@ -122,10 +131,18 @@
 				></v-pagination>
 			</template>
 		</v-data-table>
-        <div section-divider style="height: 32px; width: 100%"/>
-        <h1>实例配置</h1>
-        <p>下面列出的是实例配置信息，其综合决定了实例的价格和配置。其中实例类型和地域与价格直接相关。</p>
-		<v-list class="instance-set" elevation="1" rounded :dense="isSM()" v-if="instanceInfoRender.length > 0">
+		<div section-divider style="height: 32px; width: 100%" />
+		<h1>实例配置</h1>
+		<p>
+			下面列出的是实例配置信息，其综合决定了实例的价格和配置。其中实例类型和地域与价格直接相关。
+		</p>
+		<v-list
+			class="instance-set"
+			elevation="1"
+			rounded
+			:dense="isSM()"
+			v-if="instanceInfoRender.length > 0"
+		>
 			<v-list-item v-for="(x, i) in instanceInfoRender" :key="i">
 				<v-list-item-icon
 					><v-icon>mdi-{{ x.icon }}</v-icon></v-list-item-icon
@@ -195,6 +212,8 @@ export default Vue.extend({
 				top: 0,
 				today: 0,
 				yesterday: 0,
+				top30raw: {},
+				topraw: {},
 			},
 			instanceInfo: {} as InstanceInfo,
 			instanceInfoRender: {},
@@ -296,6 +315,8 @@ export default Vue.extend({
 				if (r.data.status === "ok") {
 					// @ts-ignore
 					this.statistics.top30 = Number(r.data.data.amount);
+					// @ts-ignore
+					this.statistics.top30raw = r.data.data;
 				}
 			});
 			get(
@@ -306,6 +327,8 @@ export default Vue.extend({
 				if (r.data.status === "ok") {
 					// @ts-ignore
 					this.statistics.top = Number(r.data.data.amount);
+					// @ts-ignore
+					this.statistics.topraw = r.data.data;
 				}
 			});
 		},
@@ -359,6 +382,10 @@ export default Vue.extend({
 			});
 		},
 		isSM,
+		formatDate(date: string) {
+			if (!!!date) return "loading..."
+			return moment(date).format("YYYY-MM-DD HH:mm:ss")
+		}
 	},
 	watch: {
 		"fundTable.options": {
@@ -390,7 +417,7 @@ export default Vue.extend({
 <style lang="less" scoped>
 .pagination {
 	padding: 16px 0;
-    width: 100%;
+	width: 100%;
 }
 
 .config {
