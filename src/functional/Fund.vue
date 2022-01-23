@@ -65,7 +65,7 @@
 									: "￥" + statistics.top30.toFixed(2)
 							}}</span>
 						</template>
-						{{ formatDate(statistics.top30raw.date) }}
+						{{ formatDate(statistics.top30raw.date) + " (" + statistics.top30raw.type + ")" }}
 					</v-tooltip>
 				</div>
 				<div class="item">
@@ -78,7 +78,7 @@
 									: "￥" + statistics.top.toFixed(2)
 							}}</span>
 						</template>
-						{{ formatDate(statistics.topraw.date) }}
+						{{ formatDate(statistics.topraw.date) + " (" + statistics.topraw.type +")" }}
 					</v-tooltip>
 				</div>
 			</div>
