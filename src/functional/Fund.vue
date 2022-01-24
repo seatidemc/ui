@@ -65,7 +65,7 @@
 									: "￥" + statistics.top30.toFixed(2)
 							}}</span>
 						</template>
-						{{ formatDate(statistics.top30raw.date) + " (" + statistics.top30raw.type + ")" }}
+						{{ formatDate(statistics.top30raw.date) + " (" + (statistics.top30raw.type || '?') + ")" }}
 					</v-tooltip>
 				</div>
 				<div class="item">
@@ -78,7 +78,7 @@
 									: "￥" + statistics.top.toFixed(2)
 							}}</span>
 						</template>
-						{{ formatDate(statistics.topraw.date) + " (" + statistics.topraw.type +")" }}
+						{{ formatDate(statistics.topraw.date) + " (" + (statistics.topraw.type || '?') +")" }}
 					</v-tooltip>
 				</div>
 			</div>
@@ -352,7 +352,7 @@ export default Vue.extend({
 							info.systemdisk.type +
 							" " +
 							info.systemdisk.size +
-							"GB",
+							"G",
 						icon: "harddisk",
 					},
 					{
@@ -361,7 +361,7 @@ export default Vue.extend({
 							info.datadisk.type +
 							" " +
 							info.datadisk.size +
-							"GB",
+							"G",
 						icon: "harddisk",
 					},
 					{
