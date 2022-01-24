@@ -35,12 +35,16 @@ router.beforeEach((to, from, next) => {
 			let token = getToken();
 			let username = getTokenUsername();
 			if (!!!token) {
+				nprogress.done();
 				next('/auth');
 			}
 
 			checkLogin(username, token)
 				.then(() => next())
-				.catch(e => next('/auth'));
+				.catch(e => {
+					nprogress.done();
+					next('/auth');
+				});
 		} else {
 			next();
 		}

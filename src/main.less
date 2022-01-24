@@ -1,6 +1,6 @@
 @import '~@/wechatsans.css';
 @import '~@/mc.less';
-@import "~@/nprogress.less";
+@import '~@/nprogress.less';
 
 body {
 	margin: 0;
@@ -32,10 +32,10 @@ body {
 .empty {
 	width: 100%;
 	text-align: center;
-	color: rgba(0, 0, 0, .5);
+	color: rgba(0, 0, 0, 0.5);
 	font-size: 20px;
 	padding: 32px 0;
-	border: 1px dashed rgba(0,0,0,.21);
+	border: 1px dashed rgba(0, 0, 0, 0.21);
 	display: block;
 	border-radius: 5px;
 }
@@ -79,7 +79,6 @@ h1 {
 	margin: 0;
 	padding: 16px 0;
 }
-
 
 *::selection {
 	background: rgba(#fcd307, 0.15);
@@ -149,6 +148,25 @@ h1 {
 			color: #43a047;
 		}
 	}
+}
+
+// fix for router-directed active state display
+
+.v-list .v-list-item--active .v-icon {
+	color: #0000008a !important;
+}
+
+.theme--light.v-list-item--active:hover::before,
+.theme--light.v-list-item--active::before {
+	opacity: 0;
+}
+
+.realactive:hover::before, .realactive::before {
+	opacity: .21 !important;
+}
+
+.v-list .realactive .v-icon {
+	color: inherit !important;
 }
 
 @primaryg: linear-gradient(135deg, rgba(255, 230, 0, 1) 0%, rgb(250, 173, 6) 70%);

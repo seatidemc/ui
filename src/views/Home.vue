@@ -18,7 +18,7 @@
 						<v-list-item
 							:class="
 								'f.' + x.to === $route.name
-									? 'v-item--active v-list-item--active'
+									? 'realactive'
 									: ''
 							"
 							@click.native="
@@ -54,7 +54,7 @@
 				<v-btn icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
-				<v-toolbar-title class="tidelab-typo">
+				<v-toolbar-title @click="$router.push('/overview')" class="tidelab-typo">
 					<img src="@/assets/seatide-main.svg" />
 					<span>TiDELab</span>
 				</v-toolbar-title>

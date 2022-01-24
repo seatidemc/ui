@@ -241,6 +241,7 @@ export default Vue.extend({
 	width: 350px;
 	display: block;
 	margin: auto;
+	margin-top: 32px;
 	@media screen and (max-width: 800px) {
 		width: 300px;
 	}
