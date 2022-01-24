@@ -59,14 +59,26 @@
 					<span>TiDELab</span>
 				</v-toolbar-title>
 				<v-spacer />
+				<v-tooltip bottom v-if="$route.name === 'f.overview' && deployStatus !== ''">
+					<template v-slot:activator="{ on, attrs }">
+						<v-btn
+							v-bind="attrs"
+							v-on="on"
+							@click="$bus.$emit('open-deploy-dialog')"
+							icon
+						>
+							<v-icon v-if="deployStatus !== 'loading'">{{ deployStatus === 'ok' ? 'mdi-check' : 'mdi-alert' }}</v-icon>
+							<v-progress-circular :width="2" :size="20" indeterminate v-if="deployStatus === 'loading'"/>
+						</v-btn>
+					</template>
+					<span>查看部署情况</span>
+				</v-tooltip>
 				<v-tooltip bottom>
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
 							v-bind="attrs"
 							v-on="on"
-							@click="
-								pageHelpDialog = true
-							"
+							@click="pageHelpDialog = true"
 							icon
 						>
 							<v-icon>mdi-help-circle-outline</v-icon>
@@ -116,8 +128,7 @@
 		<v-dialog v-model="pageHelpDialog" max-width="700px">
 			<v-card>
 				<v-card-title>本页帮助</v-card-title>
-				<v-card-text v-html="getCurrentPageHelp()">
-				</v-card-text>
+				<v-card-text v-html="getCurrentPageHelp()"> </v-card-text>
 			</v-card>
 		</v-dialog>
 	</div>
@@ -134,12 +145,16 @@ export default Vue.extend({
 			drawer: null as null | boolean,
 			listItem: 0,
 			dict: ["overview", "users", "server"],
-			pageHelpDialog: false
+			pageHelpDialog: false,
+			deployStatus: "",
 		};
 	},
 	mounted() {
 		this.username = getTokenUsername();
 		this.listItem = this.dict.indexOf(this.current);
+		this.$bus.$on("deploy-status-change", (v: string) => {
+			this.deployStatus = v;
+		});
 	},
 	methods: {
 		logout() {
@@ -186,9 +201,9 @@ export default Vue.extend({
 				<p>「概览」页面的右上角<strong>包含了所有你可以进行的操作</strong>，选择一个点按后即可执行。注：只有管理员能够进行的操作不会显示在普通用户的界面里，在此不介绍。</p>
 				<ul><li><strong>实时更新</strong> — 若开启，则当前页面的所有信息都会保持最新。也就是说任何变化都会即时反馈到当前页面上，而不需要刷新。</li><li><strong>创建实例</strong> — 创建一个新的实例，并开启 Minecraft 服务器。如果服务器自动关闭，又需要开始游戏，则可以执行此操作。</li></ul>
 				<p><strong>服务器 MOTD</strong> 板块会在服务器开启时显示服务器的 MOTD 信息。若服务器内有玩家，在标题处也会显示玩家数目。</p>
-				`
+				`;
 			}
-			if (this.$route.name === 'f.fund') {
+			if (this.$route.name === "f.fund") {
 				return `
 				<p><strong>「资金流」</strong>页面提供了查看服务器收支情况的简便方式。你可以在这里浏览自 SEATiDE 开启以来任意时刻的收支情况和简要的统计信息。下面是一些概念解释。</p>
 				<ul>
@@ -206,9 +221,9 @@ export default Vue.extend({
 				<li><b>地域</b> — 代表该实例的物理形态存在的地点。每个地域分为用英文字母表示的若干可用区。不同地域、不同可用区的网络质量不一样，价格也不一样。一般我们会选择最低价的。<strong>价格相差略大，例如上海某可用区与张家口某可用区的首小时价格可以相差最多 1 元。</strong></li>
 				<li><b>首小时价格</b> — 代表该实例每次收费的参考价格。理论上每次收费的价格会在该价格周围波动（一般为 ±0.5）。具体的波动情况可以参考收支表格。<strong>注意：实例的扣费时间不定，并不是规律性的每小时扣一次。</strong></li>
 				</ul>
-				`
+				`;
 			}
-			return '<div class="no-help-for-this-page empty">当前页面暂无可用的帮助</div>'
+			return '<div class="no-help-for-this-page empty">当前页面暂无可用的帮助</div>';
 		}
 	},
 	computed: {
