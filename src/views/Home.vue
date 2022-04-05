@@ -57,7 +57,7 @@
 					class="tidelab-typo"
 				>
 					<img src="@/assets/seatide-main.svg" />
-					<span>TiDELab</span>
+					<span class="no-font-feature">TiDELab</span>
 				</v-toolbar-title>
 				<v-spacer />
 				<v-tooltip
@@ -207,15 +207,6 @@ export default Vue.extend({
 			return r;
 		},
 		getCurrentPageHelp() {
-			if (this.$route.name === "f.overview") {
-				return `
-				<p>在<strong>「概览」</strong>页面，你可以查看此时此刻<strong>实例、服务器和 API </strong>三大 SEATiDE 运行基础的运行状态，下面简要介绍了它们的角色和功能。</p>
-				<ul><li><strong>实例</strong> — 运行服务器的主机。要运行服务器，必须先启动一个实例。</li><li><strong>服务器</strong> — Minecraft 服务器本体。要加入游戏，必须保证服务器正常运行。</li><li><strong>API</strong> — 负责调度的中间件。在 TiDELab 的所有指令都需要经过 API 的处理和记录才能正常被实例/服务器接收和处理。</ul>
-				<p>「概览」页面的右上角<strong>包含了所有你可以进行的操作</strong>，选择一个点按后即可执行。注：只有管理员能够进行的操作不会显示在普通用户的界面里，在此不介绍。</p>
-				<ul><li><strong>实时更新</strong> — 若开启，则当前页面的所有信息都会保持最新。也就是说任何变化都会即时反馈到当前页面上，而不需要刷新。</li><li><strong>创建实例</strong> — 创建一个新的实例，并开启 Minecraft 服务器。如果服务器自动关闭，又需要开始游戏，则可以执行此操作。</li></ul>
-				<p><strong>服务器 MOTD</strong> 板块会在服务器开启时显示服务器的 MOTD 信息。若服务器内有玩家，在标题处也会显示玩家数目。</p>
-				`;
-			}
 			if (this.$route.name === "f.fund") {
 				return `
 				<p><strong>「资金流」</strong>页面提供了查看服务器收支情况的简便方式。你可以在这里浏览自 SEATiDE 开启以来任意时刻的收支情况和简要的统计信息。下面是一些概念解释。</p>

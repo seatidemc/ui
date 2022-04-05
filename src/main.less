@@ -1,6 +1,7 @@
 @import '~@/wechatsans.css';
 @import '~@/mc.less';
 @import '~@/nprogress.less';
+@import '~@/assets/inter/inter.css';
 
 body {
 	margin: 0;
@@ -8,7 +9,16 @@ body {
 }
 
 .primary-font {
+	font-feature-settings: 'salt';
+	-moz-font-feature-settings: 'salt';
+	-webkit-font-feature-settings: 'salt';
 	font-family: 'Inter', ui-sans-serif, -apple-system, Helvetica, 'Segoe UI', '微软雅黑', 'Microsoft YaHei UI', sans-serif !important;
+}
+
+.no-font-feature {
+	font-feature-settings: normal;
+	-webkit-font-feature-settings: normal;
+	-moz-font-feature-settings: normal;
 }
 
 .v-application {
@@ -77,6 +87,12 @@ body {
 	width: 100%;
 	height: 100vh;
 	position: relative;
+}
+
+@media (max-width: 1000px) {
+	.col {
+		padding: 0 !important;
+	}
 }
 
 h3 {

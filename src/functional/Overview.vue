@@ -97,6 +97,9 @@
 									<v-icon color="red">mdi-close</v-icon>
 									{{ server.statusText }}
 								</span>
+								<span v-if="instance.status !== 'ok' && instance.status !== 'ng'">
+									<v-progress-circular :size="13" color="gray" width="1.5" indeterminate/>
+								</span>
 							</div>
 							<div class="status-item">
 								<v-icon>mdi-minecraft</v-icon>
@@ -114,6 +117,9 @@
 								>
 									<v-icon color="red">mdi-close</v-icon>
 									{{ server.statusText }}
+								</span>
+								<span v-if="server.status !== 'ok' && server.status !== 'ng'">
+									<v-progress-circular :size="13" color="gray" width="1.5" indeterminate/>
 								</span>
 							</div>
 							<div class="status-item">
@@ -750,13 +756,12 @@ export default Vue.extend({
 	position: absolute;
 	right: 32px;
 	top: 32px;
-	display: grid;
 	align-items: center;
 	grid-auto-flow: column;
 	grid-column-gap: 16px;
 	@media (max-width: 800px) {
-		right: 0;
-		top: 16px;
+		right: 4px;
+		top: 4px;
 	}
 }
 
