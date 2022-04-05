@@ -440,6 +440,7 @@ export default Vue.extend({
 				deploy: this.deployStatus,
 				server: this.server.status,
 				instance: this.instance.status,
+				players: this.server.onlinePlayers.length
 			};
 		},
 	},
@@ -455,7 +456,7 @@ export default Vue.extend({
 						this.mainIconColor = "gray";
 					} else {
 						if (v.server === "ok" && v.instance === "ok") {
-							if (this.server.onlinePlayers.length === 0) {
+							if (v.players === 0) {
 								this.mainStatus = "无人游玩";
 								this.mainIcon = "mdi-hexagon-outline";
 								this.mainIconColor = "amber";
