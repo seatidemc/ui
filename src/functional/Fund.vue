@@ -1,10 +1,5 @@
 <template>
 	<div fund>
-		<h1 title>资金流</h1>
-		<p>
-			这里展示了 SEATiDE
-			公开的资金流，包括实时准确数据和对过往消耗的统计数据，用于参考服务器的花费。
-		</p>
 		<div class="balance elevation-1">
 			<v-icon class="background-cash">mdi-currency-jpy</v-icon>
 			<div class="section-a">
@@ -133,10 +128,7 @@
 			</template>
 		</v-data-table>
 		<div section-divider style="height: 32px; width: 100%" />
-		<h1>实例配置</h1>
-		<p>
-			下面列出的是实例配置信息，其综合决定了实例的价格和配置。其中实例类型和地域与价格直接相关。
-		</p>
+		<h3>当前实例配置</h3>
 		<v-list
 			class="instance-set"
 			elevation="1"

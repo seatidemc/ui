@@ -1,23 +1,16 @@
 <template>
 	<div users>
-		<h1 title>用户管理</h1>
-		<p>下面展示了所有的注册用户信息，你可以修改它们。</p>
-		<v-data-table v-if="verified"
-			no-results-text="暂无结果"
-			loading-text="加载数据中..."
-			:loading="tableLoading"
-			:items="data"
-			no-data-text="暂无任何信息"
-			:headers="headers"
-			v-model="selectedItems"
-			show-select
-			hide-default-footer
-		>
-			<template v-slot:top>
-				<v-toolbar flat>
+		<div class="empty" style="margin-bottom: 32px">
+			此处 SOON
+		</div>
+		<v-card>
+			<v-card-title
+				><v-toolbar flat>
 					<v-toolbar-title v-if="selectedItems.length > 0"
-						>已选 {{ selectedItems.length }} 个</v-toolbar-title
+						>已选中
+						{{ selectedItems.length }} 个用户</v-toolbar-title
 					>
+					<v-toolbar-title v-else>所有用户</v-toolbar-title>
 					<v-spacer />
 					<v-btn
 						color="primary"
@@ -132,31 +125,49 @@
 							</v-card-actions>
 						</v-card>
 					</v-dialog>
-				</v-toolbar>
-			</template>
-			<template v-slot:[`item.actions`]="{ item }">
-				<v-icon
-					class="mr-4"
-					@click="
-						currentTarget = item;
-						currentTarget.newUsername = item.username;
-						dialog.edit = true;
-					"
-				>
-					mdi-pencil
-				</v-icon>
-				<v-icon
-					@click="
-						currentTarget = item;
-						dialog.confirmAction = deleteSingle;
-						dialog.confirm = true;
-					"
-				>
-					mdi-delete
-				</v-icon>
-			</template>
-		</v-data-table>
-		<v-pagination style="padding: 16px 0" v-if="totalPages > 1" v-model="paginPage" :length="totalPages"></v-pagination>
+				</v-toolbar></v-card-title
+			>
+			<v-data-table
+				v-if="verified"
+				no-results-text="暂无结果"
+				loading-text="加载数据中..."
+				:loading="tableLoading"
+				:items="data"
+				no-data-text="暂无任何信息"
+				:headers="headers"
+				v-model="selectedItems"
+				show-select
+				hide-default-footer
+			>
+				<template v-slot:[`item.actions`]="{ item }">
+					<v-icon
+						class="mr-4"
+						@click="
+							currentTarget = item;
+							currentTarget.newUsername = item.username;
+							dialog.edit = true;
+						"
+					>
+						mdi-pencil
+					</v-icon>
+					<v-icon
+						@click="
+							currentTarget = item;
+							dialog.confirmAction = deleteSingle;
+							dialog.confirm = true;
+						"
+					>
+						mdi-delete
+					</v-icon>
+				</template>
+			</v-data-table>
+		</v-card>
+		<v-pagination
+			style="padding: 16px 0"
+			v-if="totalPages > 1"
+			v-model="paginPage"
+			:length="totalPages"
+		></v-pagination>
 		<v-snackbar v-model="snackbar">
 			{{ snackbarText }}
 		</v-snackbar>
@@ -218,12 +229,12 @@ export default Vue.extend({
 			snackbarText: "",
 			paginPage: 1,
 			totalPages: 0,
-            verified: false
+			verified: false,
 		};
 	},
 	methods: {
 		getData(page: number) {
-            this.tableLoading = true;
+			this.tableLoading = true;
 			get(
 				"/api/user/v1/get/all?page=" + page + "&pagin=" + this.pagin
 			).then((r) => {
@@ -257,10 +268,10 @@ export default Vue.extend({
 			this.selectedItems.forEach((k) => {
 				usernames.push(k.username);
 			});
-            if (usernames.length === 1) {
-                this.currentTarget = this.selectedItems[0];
-                return this.deleteSingle();
-            }
+			if (usernames.length === 1) {
+				this.currentTarget = this.selectedItems[0];
+				return this.deleteSingle();
+			}
 			post("/api/user/v1/action", {
 				type: "delete",
 				usernames,
@@ -285,7 +296,7 @@ export default Vue.extend({
 		refreshTable() {
 			this.getData(this.page);
 			this.refreshPagin();
-            this.selectedItems = [];
+			this.selectedItems = [];
 		},
 		submitEdit() {
 			this.dialog.edit = false;
@@ -327,7 +338,7 @@ export default Vue.extend({
 					}
 				});
 			}
-            this.dialog.editAction = ""
+			this.dialog.editAction = "";
 		},
 		refreshPagin() {
 			get("/api/user/v1/get/count").then((r) => {
@@ -340,11 +351,11 @@ export default Vue.extend({
 		},
 	},
 	mounted() {
-        checkAdmin().then(r => {
-            if (r) {
-                this.verified = true;
-            }
-        })
+		checkAdmin().then((r) => {
+			if (r) {
+				this.verified = true;
+			}
+		});
 		this.getData(0);
 		this.refreshPagin();
 	},
@@ -352,9 +363,9 @@ export default Vue.extend({
 		paginPage(v) {
 			this.page = v - 1;
 		},
-        page(v) {
-            this.getData(v);
-        }
+		page(v) {
+			this.getData(v);
+		},
 	},
 });
 </script>

@@ -48,6 +48,10 @@ body {
 	}
 }
 
+.v-btn__content {
+	line-height: inherit !important;
+}
+
 .v-dialog {
 	.v-card__text {
 		color: black !important;
@@ -75,9 +79,26 @@ body {
 	position: relative;
 }
 
-h1 {
-	margin: 0;
-	padding: 16px 0;
+h3 {
+	font-weight: normal;
+	cursor: default;
+	margin-top: 16px;
+	margin-bottom: 12px;
+
+	&::before {
+		content: "#";
+		transform: translateY(2px);
+		margin-right: 4px;
+		font-weight: bold;
+		color: @primary;
+		opacity: 0.5;
+		transition: all 0.2s ease;
+	}
+	&:hover {
+		&::before {
+			opacity: 1;
+		}
+	}
 }
 
 *::selection {
@@ -88,6 +109,7 @@ h1 {
 	background: @primaryg;
 	background-clip: text;
 	color: transparent;
+	display: inline-block;
 }
 
 .btn-primary {
@@ -161,13 +183,20 @@ h1 {
 	opacity: 0;
 }
 
-.realactive:hover::before, .realactive::before {
-	opacity: .21 !important;
+.realactive:hover::before,
+.realactive::before {
+	opacity: 0.21 !important;
 }
 
 .v-list .realactive .v-icon {
 	color: inherit !important;
 }
 
-@primaryg: linear-gradient(135deg, rgba(255, 230, 0, 1) 0%, rgb(250, 173, 6) 70%);
+hr {
+	border: 0;
+    border-top: 1px solid #0000001a;
+    margin-top: 0;
+}
+
+@primaryg: linear-gradient(135deg, #ffe600, #faad06);
 @primary: #fcd307;

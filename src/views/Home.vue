@@ -17,9 +17,7 @@
 					<v-list-item-group v-model="listItem">
 						<v-list-item
 							:class="
-								'f.' + x.to === $route.name
-									? 'realactive'
-									: ''
+								'f.' + x.to === $route.name ? 'realactive' : ''
 							"
 							@click.native="
 								$router.push('/' + x.to);
@@ -54,12 +52,18 @@
 				<v-btn icon @click="drawer = !drawer">
 					<v-icon>mdi-menu</v-icon>
 				</v-btn>
-				<v-toolbar-title @click="$router.push('/overview')" class="tidelab-typo">
+				<v-toolbar-title
+					@click="$router.push('/overview')"
+					class="tidelab-typo"
+				>
 					<img src="@/assets/seatide-main.svg" />
 					<span>TiDELab</span>
 				</v-toolbar-title>
 				<v-spacer />
-				<v-tooltip bottom v-if="$route.name === 'f.overview' && deployStatus !== ''">
+				<v-tooltip
+					bottom
+					v-if="$route.name === 'f.overview' && deployStatus !== ''"
+				>
 					<template v-slot:activator="{ on, attrs }">
 						<v-btn
 							v-bind="attrs"
@@ -67,8 +71,17 @@
 							@click="$bus.$emit('open-deploy-dialog')"
 							icon
 						>
-							<v-icon v-if="deployStatus !== 'loading'">{{ deployStatus === 'ok' ? 'mdi-check' : 'mdi-alert' }}</v-icon>
-							<v-progress-circular :width="2" :size="20" indeterminate v-if="deployStatus === 'loading'"/>
+							<v-icon v-if="deployStatus !== 'loading'">{{
+								deployStatus === "ok"
+									? "mdi-check"
+									: "mdi-alert"
+							}}</v-icon>
+							<v-progress-circular
+								:width="2"
+								:size="20"
+								indeterminate
+								v-if="deployStatus === 'loading'"
+							/>
 						</v-btn>
 					</template>
 					<span>查看部署情况</span>
@@ -119,9 +132,9 @@
 			</v-app-bar>
 			<v-main>
 				<v-container>
-					<v-card class="main-card">
+					<div class="main-container">
 						<router-view />
-					</v-card>
+					</div>
 				</v-container>
 			</v-main>
 		</v-app>
@@ -224,7 +237,7 @@ export default Vue.extend({
 				`;
 			}
 			return '<div class="no-help-for-this-page empty">当前页面暂无可用的帮助</div>';
-		}
+		},
 	},
 	computed: {
 		current() {
@@ -281,5 +294,12 @@ export default Vue.extend({
 		}
 	}
 	cursor: pointer;
+}
+
+.main-container {
+	max-width: 1000px;
+	padding: 16px;
+	margin: auto;
+	position: relative;
 }
 </style>
