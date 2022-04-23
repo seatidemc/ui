@@ -435,7 +435,7 @@ export default Vue.extend({
 			autoUpdate: false,
 			deployDialog: false,
 			motdHtml: "",
-			mainStatus: "一切正常" as
+			mainStatus: "获取中..." as
 				| "一切正常"
 				| "空转"
 				| "无人游玩"
@@ -443,12 +443,12 @@ export default Vue.extend({
 				| "加载中"
 				| "部署请求超时",
 			mainLoading: false,
-			mainIcon: "mdi-check-all" as
+			mainIcon: "mdi-help-circle-outline" as
 				| "mdi-check-all"
 				| "mdi-close"
 				| "mdi-alert-outline"
 				| "mdi-hexagon-outline",
-			mainIconColor: "green" as "green" | "amber" | "red" | "gray",
+			mainIconColor: "gray" as "green" | "amber" | "red" | "gray",
 		};
 	},
 	components: {
