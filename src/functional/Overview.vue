@@ -97,8 +97,18 @@
 									<v-icon color="red">mdi-close</v-icon>
 									{{ server.statusText }}
 								</span>
-								<span v-if="instance.status !== 'ok' && instance.status !== 'ng'">
-									<v-progress-circular :size="13" color="gray" width="1.5" indeterminate/>
+								<span
+									v-if="
+										instance.status !== 'ok' &&
+										instance.status !== 'ng'
+									"
+								>
+									<v-progress-circular
+										:size="13"
+										color="gray"
+										width="1.5"
+										indeterminate
+									/>
 								</span>
 							</div>
 							<div class="status-item">
@@ -118,13 +128,34 @@
 									<v-icon color="red">mdi-close</v-icon>
 									{{ server.statusText }}
 								</span>
-								<span v-if="server.status !== 'ok' && server.status !== 'ng'">
-									<v-progress-circular :size="13" color="gray" width="1.5" indeterminate/>
+								<span
+									v-if="
+										server.status !== 'ok' &&
+										server.status !== 'ng'
+									"
+								>
+									<v-progress-circular
+										:size="13"
+										color="gray"
+										width="1.5"
+										indeterminate
+									/>
 								</span>
+							</div>
+							<div class="status-item">
+								<v-icon>mdi-web</v-icon>
+								<span class="name">API</span>
+								<span class="text green--text"
+									><v-icon color="green"
+										>mdi-check</v-icon
+									></span
+								>
 							</div>
 						</meta-bar>
 					</div>
-					<h3 v-if="server.onlinePlayers.length > 0">在线玩家 · {{ server.onlinePlayers.length }}/50</h3>
+					<h3 v-if="server.onlinePlayers.length > 0">
+						在线玩家 · {{ server.onlinePlayers.length }}/50
+					</h3>
 					<div
 						class="player-details"
 						v-if="server.onlinePlayers.length > 0"
@@ -145,7 +176,7 @@
 					</div>
 					<h3>MOTD 信息</h3>
 					<div v-if="motdHtml" v-html="motdHtml" />
-					<div v-else class="empty">服务器尚未开启</div>
+					<div v-else class="empty">开启服务器后显示</div>
 					<h3>操作</h3>
 					<div class="actions">
 						<v-menu>
@@ -370,6 +401,7 @@ import Motd from "mcmotdparser";
 import MetaBar from "@/components/MetaBar.vue";
 import MetaItem from "@/components/MetaItem.vue";
 import SmartButton from "@/components/SmartButton.vue";
+
 export default Vue.extend({
 	data() {
 		return {
@@ -430,7 +462,7 @@ export default Vue.extend({
 				deploy: this.deployStatus,
 				server: this.server.status,
 				instance: this.instance.status,
-				players: this.server.onlinePlayers.length
+				players: this.server.onlinePlayers.length,
 			};
 		},
 	},
@@ -440,7 +472,7 @@ export default Vue.extend({
 			handler(v) {
 				if (v.deploy === "ok" || v.deploy === "") {
 					this.mainLoading = false;
-					if (v.instance === "stopped") {
+					if (v.server === "ng" && v.instance === "ng") {
 						this.mainStatus = "尚未开启";
 						this.mainIcon = "mdi-hexagon-outline";
 						this.mainIconColor = "gray";
@@ -456,10 +488,7 @@ export default Vue.extend({
 								this.mainIconColor = "green";
 							}
 						}
-						if (
-							(v.server === "stopped" || v.server === "ng") &&
-							v.instance === "ok"
-						) {
+						if (v.server === "ng" && v.instance === "ok") {
 							this.mainStatus = "空转";
 							this.mainIcon = "mdi-alert-outline";
 							this.mainIconColor = "amber";
@@ -755,20 +784,24 @@ export default Vue.extend({
 		top: 4px;
 	}
 }
+
 .auto-update-btn {
 	transition: all 0.2s ease;
+
 	&.active {
 		background: #2196f3 !important;
 		color: white !important;
 		border-color: #2196f3 !important;
 	}
 }
+
 .display-1 {
 	color: white;
 	font-weight: bold;
 	display: inline-flex;
 	align-items: center;
 	margin: 28px 0;
+
 	.mdi {
 		width: 40px;
 		margin-right: 0.5em;
@@ -777,6 +810,7 @@ export default Vue.extend({
 		align-items: center;
 	}
 }
+
 .row {
 	align-items: stretch;
 	.v-card {
@@ -787,9 +821,11 @@ export default Vue.extend({
 		margin-bottom: 16px;
 	}
 }
+
 .expansions {
 	margin-top: 16px;
 }
+
 .deploy-result {
 	background: black;
 	border-radius: 5px;
@@ -802,9 +838,11 @@ export default Vue.extend({
 	max-height: 400px;
 	overflow-x: hidden;
 }
+
 .row {
 	margin-bottom: 0;
 }
+
 .copy-button {
 	cursor: pointer;
 	padding: 4px 6px;
@@ -825,30 +863,37 @@ export default Vue.extend({
 		transform: scale(1.1);
 	}
 }
+
 .content {
 	@media (max-width: 1000px) {
 		h2 {
 			font-size: 16px;
 		}
+
 		.status-card {
 			padding: 0 !important;
 			.ip {
 				font-size: 40px !important;
 			}
 		}
+
 		.running-status {
 			padding: 16px !important;
+
 			.status-item {
 				.name {
 					display: none;
 				}
+
 				&:not(&:last-child):after {
 					content: "/";
 				}
 			}
 		}
+
 		.actions {
 			flex-direction: column;
+
 			.v-btn {
 				margin: 8px 0 !important;
 				width: 100%;
@@ -867,6 +912,7 @@ export default Vue.extend({
 			font-size: 56px;
 			line-height: 1;
 		}
+
 		.running-status {
 			padding: 20px 24px;
 			padding-top: 16px;
@@ -876,19 +922,23 @@ export default Vue.extend({
 				display: flex;
 				align-items: center;
 				font-size: 32px;
+				margin-bottom: 8px;
 				.mdi {
 					margin-right: 16px;
 					font-size: 48px;
 				}
 			}
+
 			.status-meta {
 				margin-top: 8px;
 			}
+
 			.status-item {
 				.mdi {
 					font-size: 18px;
 					margin-right: 4px;
 				}
+
 				.text {
 					margin-left: 8px;
 				}
@@ -904,19 +954,23 @@ export default Vue.extend({
 				}
 			}
 		}
+
 		.actions {
 			display: flex;
 			align-items: center;
+
 			> .v-btn {
 				margin: 0 8px;
 				&:first-child {
 					margin-left: 0;
 				}
+
 				&:last-child {
 					margin-right: 0;
 				}
 			}
 		}
+
 		.player-details {
 			display: flex;
 			align-items: stretch;
@@ -949,6 +1003,7 @@ export default Vue.extend({
 				border: 1px solid rgba(0, 0, 0, 0.21);
 				display: inline-flex;
 				align-items: center;
+
 				h1 {
 					font-weight: normal;
 					margin: 0;
