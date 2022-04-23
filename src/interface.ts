@@ -56,3 +56,31 @@ interface ServerInformationFull {
 		name: string
 	}[] | null
 }
+
+interface ServerStatusInformation {
+	device: {
+		cpu: {
+			usage: number,
+			name: string,
+			physical: {
+				lcores: number,
+				pcores: number
+			}
+		},
+		ram: {
+			avail: number,
+			max: number,
+			physical: {
+				clocksp: number,
+				type: string,
+				capacity: number
+			}[]
+		}
+	},
+	server: {
+		online: string[],
+		total: string[],
+		tps: number,
+		uptime: number
+	}
+}

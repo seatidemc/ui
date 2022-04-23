@@ -118,6 +118,7 @@
 </template>
 
 <script lang="ts">
+import { bus } from "@/bus";
 import { delToken, getTokenUsername, ltMdBreakpoint } from "@/fn";
 import Vue from "vue";
 
@@ -135,7 +136,7 @@ export default Vue.extend({
 	mounted() {
 		this.username = getTokenUsername();
 		this.listItem = this.dict.indexOf(this.current);
-		this.$bus.$on("deploy-status-change", (v: string) => {
+		bus.$on("deploy-status-change", (v: string) => {
 			this.deployStatus = v;
 		});
 	},
@@ -156,11 +157,11 @@ export default Vue.extend({
 					icon: "mdi-view-dashboard",
 					to: "overview",
 				},
-				// {
-				// 	title: "服务器管理",
-				// 	icon: "mdi-minecraft",
-				// 	to: "server"
-				// },
+				{
+					title: "服务器",
+					icon: "mdi-minecraft",
+					to: "server"
+				},
 				{
 					title: "资金流",
 					icon: "mdi-cash",
@@ -196,6 +197,20 @@ export default Vue.extend({
 				<li><b>首小时价格</b> — 代表该实例每次收费的参考价格。理论上每次收费的价格会在该价格周围波动（一般为 ±0.5）。具体的波动情况可以参考收支表格。<strong>注意：实例的扣费时间不定，并不是规律性的每小时扣一次。</strong></li>
 				</ul>
 				`;
+			}
+			if (this.$route.name === "f.overview") {
+				return `
+				<p><strong>「概览」</strong>页面提供了查看服务器、实例和 API 当前运行的基本情况，以及服务器本身的一些基本信息的功能。在这里，你也可以进行一些操作，包括：</p>
+				<ul>
+				<li><strong>创建实例</strong> — 创建一个新的实例，然后开启 Minecraft 服务器。</li>
+				<li><strong>删除实例*</strong> — 删除当前的实例并不保存任何备份以外的内容。</li>
+				<li><strong>关闭实例*</strong> — 关闭当前实例但保留实例。</li>
+				<li><strong>开启实例*</strong> — 开启已经关闭的实例。</li>
+				</ul>
+				<p>注 * 的仅适用于管理员。</p>
+				<p>若要开始游戏，则可以点击<strong>创建实例</strong>按钮，随后创建进程将开始。首先会创建一台实例（即运行 MC 服务端的载体），然后再开启服务端。当服务端正常开启以后，IP 就会在概览页面显示，此时即可将其复制到游戏中加入。</p>
+				<p><strong>注意：</strong> 开启过程可能需要 2~5 min；在开启过程中不应发生任何问题，若发生请在讨论群内发送截图并描述状况，我们将尽快解决。</p>
+				`
 			}
 			return '<div class="no-help-for-this-page empty">当前页面暂无可用的帮助</div>';
 		},

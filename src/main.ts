@@ -15,8 +15,6 @@ Vue.prototype.$open = (url: string) => {
 	window.open(url);
 };
 
-Vue.prototype.$bus = new Vue();
-
 nprogress.configure({
 	showSpinner: false
 })

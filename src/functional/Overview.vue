@@ -108,6 +108,7 @@
 										color="gray"
 										width="1.5"
 										indeterminate
+										class="loading"
 									/>
 								</span>
 							</div>
@@ -139,6 +140,7 @@
 										color="gray"
 										width="1.5"
 										indeterminate
+										class="loading"
 									/>
 								</span>
 							</div>
@@ -395,6 +397,7 @@
 
 <script lang="ts">
 import { get, getToken, post, translate, isSM } from "@/fn";
+import { bus } from "@/bus";
 import Vue from "vue";
 // @ts-ignore
 import Motd from "mcmotdparser";
@@ -440,7 +443,7 @@ export default Vue.extend({
 				| "空转"
 				| "无人游玩"
 				| "尚未开启"
-				| "加载中"
+				| "创建中..."
 				| "部署请求超时",
 			mainLoading: false,
 			mainIcon: "mdi-help-circle-outline" as
@@ -470,6 +473,7 @@ export default Vue.extend({
 		statusAll: {
 			deep: true,
 			handler(v) {
+				console.log(v);
 				if (v.deploy === "ok" || v.deploy === "") {
 					this.mainLoading = false;
 					if (v.server === "ng" && v.instance === "ng") {
@@ -488,14 +492,17 @@ export default Vue.extend({
 								this.mainIconColor = "green";
 							}
 						}
-						if (v.server === "ng" && v.instance === "ok") {
+						if (
+							(v.server === "ng" || v.server === "stopped") &&
+							v.instance === "ok"
+						) {
 							this.mainStatus = "空转";
 							this.mainIcon = "mdi-alert-outline";
 							this.mainIconColor = "amber";
 						}
 					}
 				} else if (v.deploy === "loading") {
-					this.mainStatus = "加载中";
+					this.mainStatus = "创建中...";
 					this.mainLoading = true;
 				} else if (v.deploy === "ng") {
 					this.mainStatus = "部署请求超时";
@@ -509,7 +516,7 @@ export default Vue.extend({
 			this.$cookies.set("tl-overview-auto-update", v, -1);
 		},
 		deployStatus(v) {
-			this.$bus.$emit("deploy-status-change", v);
+			bus.$emit("deploy-status-change", v);
 		},
 	},
 	methods: {
@@ -571,7 +578,8 @@ export default Vue.extend({
 							if (this.deployStatus === "ok") {
 								this.deployResult +=
 									"<br/>实例部署成功，Minecraft 服务器启动中。";
-								this.snackbar.text = "实例部署成功。";
+								this.snackbar.text =
+									"实例部署成功，开始启动服务器。";
 								this.snackbar.open = true;
 								setTimeout(() => {
 									this.refresh();
@@ -764,7 +772,7 @@ export default Vue.extend({
 		this.autoRefresh();
 		this.autoUpdate =
 			this.$cookies.get("tl-overview-auto-update") === "true";
-		this.$bus.$on("open-deploy-dialog", () => {
+		bus.$on("open-deploy-dialog", () => {
 			this.deployDialog = true;
 		});
 	},
@@ -1022,5 +1030,9 @@ export default Vue.extend({
 			}
 		}
 	}
+}
+
+.loading {
+	margin-left: 8px;
 }
 </style>

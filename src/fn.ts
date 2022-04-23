@@ -17,6 +17,16 @@ const TRANSLATION: Dictionary = {
 	'There is already an instance recorded in the database.': '实例已存在。'
 };
 
+export function toHMS(secs: number) {
+	return [3600, 60]
+		.reduceRight(
+			(pipeline: Function, breakpoint) => (remainder: number) => [Math.floor(remainder / breakpoint)].concat(pipeline(remainder % breakpoint)),
+			(r: any) => [r]
+		)(secs)
+		.map((amount: number) => amount.toString().padStart(2, '0'))
+		.join(':');
+}
+
 export function post(url: string, data: any) {
 	return new Promise<AxiosResponse<BackendResponse>>((re, rj) => {
 		axios
@@ -37,7 +47,8 @@ export function get(url: string) {
 
 /**
  *  `withoutStop` 决定是否包含句号
- */ 
+ */
+
 export function translate(str: string, withoutStop = false) {
 	let result = TRANSLATION[str];
 	if (Object.keys(TRANSLATION).includes(str)) return withoutStop ? result.slice(0, result.length - 1) : result;
