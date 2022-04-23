@@ -99,36 +99,6 @@
 					</template>
 					查看本页帮助
 				</v-tooltip>
-				<v-tooltip bottom>
-					<template v-slot:activator="{ on, attrs }">
-						<v-btn
-							v-bind="attrs"
-							v-on="on"
-							@click="
-								$open(
-									'https://w.seatide.top/automation/tidelab-index'
-								)
-							"
-							icon
-						>
-							<v-icon>mdi-book-search-outline</v-icon>
-						</v-btn>
-					</template>
-					<span>阅读帮助文档</span>
-				</v-tooltip>
-				<v-tooltip left>
-					<template v-slot:activator="{ on, attrs }">
-						<v-btn
-							v-bind="attrs"
-							v-on="on"
-							@click="$open('https://seatide.top')"
-							icon
-						>
-							<v-icon>mdi-arrow-top-right</v-icon>
-						</v-btn>
-					</template>
-					<span>前往官网</span>
-				</v-tooltip>
 			</v-app-bar>
 			<v-main>
 				<v-container>
