@@ -1,6 +1,6 @@
 <template>
 	<div class="meta-item">
-		<v-icon v-if="icon">{{ icon }}</v-icon>
+		<v-icon small v-if="icon">{{ icon }}</v-icon>
 		<span class="name"><slot name="name" /></span>
 		<span class="text"><slot name="text" /></span>
 	</div>

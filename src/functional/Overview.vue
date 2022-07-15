@@ -28,7 +28,7 @@
 				<div class="status-card">
 					<h2>当前服务器 IP</h2>
 					<h1 class="primary-text ip">
-						{{ server.ip || "暂无" }}
+						{{ server.ip || "--" }}
 						<smart-button
 							v-if="
 								!isSM() && /\d+\.\d+\.\d+\.\d+/.test(server.ip)
@@ -51,15 +51,15 @@
 					<meta-bar style="margin-top: 8px; margin-bottom: 16px">
 						<meta-item icon="mdi-minecraft">
 							<template #name>版本</template>
-							<template #text>1.16.5</template>
+							<template #text>1.18.2</template>
 						</meta-item>
-						<meta-item icon="mdi-gamepad">
-							<template #name>主题</template
-							><template #text>养老</template>
+						<meta-item icon="mdi-package">
+							<template #name>周目</template
+							><template #text>ST5</template>
 						</meta-item>
 						<meta-item icon="mdi-calendar"
 							><template #name>开始时间</template>
-							<template #text>2022-04-04</template></meta-item
+							<template #text>2022.07.29 或更晚</template></meta-item
 						>
 					</meta-bar>
 					<h3>状态</h3>
@@ -81,7 +81,7 @@
 						</div>
 						<meta-bar class="status-meta">
 							<div class="status-item">
-								<v-icon>mdi-server</v-icon>
+								<v-icon small>mdi-server</v-icon>
 								<span class="name">实例</span>
 								<span
 									v-if="instance.status === 'ok'"
@@ -113,7 +113,7 @@
 								</span>
 							</div>
 							<div class="status-item">
-								<v-icon>mdi-minecraft</v-icon>
+								<v-icon small>mdi-minecraft</v-icon>
 								<span class="name">服务器</span>
 								<span
 									v-if="server.status === 'ok'"
@@ -144,15 +144,6 @@
 									/>
 								</span>
 							</div>
-							<div class="status-item">
-								<v-icon>mdi-web</v-icon>
-								<span class="name">API</span>
-								<span class="text green--text"
-									><v-icon color="green"
-										>mdi-check</v-icon
-									></span
-								>
-							</div>
 						</meta-bar>
 					</div>
 					<h3 v-if="server.onlinePlayers.length > 0">
@@ -180,7 +171,8 @@
 					<div v-if="motdHtml" v-html="motdHtml" />
 					<div v-else class="empty">开启服务器后显示</div>
 					<h3>操作</h3>
-					<div class="actions">
+					<div class="empty">7.29 或更晚开放</div>
+					<div v-if="false" class="actions">
 						<v-menu>
 							<template v-slot:activator="{ on, attrs }">
 								<v-btn
@@ -942,6 +934,10 @@ export default Vue.extend({
 			}
 
 			.status-item {
+				line-height: 1.5;
+				display: flex;
+				align-items: center;
+
 				.mdi {
 					font-size: 18px;
 					margin-right: 4px;
@@ -949,7 +945,16 @@ export default Vue.extend({
 
 				.text {
 					margin-left: 8px;
+					.v-icon {
+						margin-right: -2px;
+					}
+					@media (max-width: 900px) {
+						.v-icon {
+							transform: translateY(-1px);
+						}
+					}
 				}
+
 				&::after {
 					content: "|";
 					font-size: 12px;
